@@ -101,21 +101,21 @@ public class Gun : MonoBehaviour
     //reloads players gun to the highest possible ammount <= maxAmmo
     public void Reload(){
         //checks if gun is at maxAmmo
-        Debug.Log("line 104");
+        Debug.Log("line 104");//REMOVE:
         if(ammo < maxAmmo){
-            Debug.Log("line 106");
+            Debug.Log("line 106");//REMOVE:
             //reloads as much ammo as possible into the gun
             for(int i = (maxAmmo-ammo); i >= 0; i--){
-                Debug.Log("checking "+i+" remSpores");
+                Debug.Log("checking "+i+" remSpores");//REMOVE:
                 if(GetComponentInParent<PlayerHealth>().RemSpores(i)){
                     ammo += i;
-                    Debug.Log("reloaded "+i+" ammo");
+                    Debug.Log("reloaded "+i+" ammo");//REMOVE:
                     return;
                 }
             }
         }
         else{
-            Debug.Log("max ammo");
+            Debug.Log("max ammo");//REMOVE:
         }
     }
 
