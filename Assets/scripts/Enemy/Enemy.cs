@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-
+    public float maxHealth = 100f;
     public EnemyManager enemyManager;
     public GameObject onHitEffect;
 
-    private float enemyHealth = 2f;
+    private float enemyHealth;
     // Start is called before the first frame update
     void Start()
     {
-        
+        enemyHealth = maxHealth;
     }
 
     // Update is called once per frame

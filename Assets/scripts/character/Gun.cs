@@ -11,6 +11,10 @@ public class Gun : MonoBehaviour
     public float vertRange = 20f;
     public float fireRate = 1f;
     public float gunShotRadius = 20f;
+    public int piercing = 0;
+    public bool reloadB = true;
+    public int maxAmmo = 5;
+    public int ammo;
 
     public EnemyManager enemyManager;
     public LayerMask raycastLayerMask;
@@ -23,6 +27,7 @@ public class Gun : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        ammo = maxAmmo;
         //creates a trigger hit box(big box that will damage all enemies inside)
         gunTrigger = GetComponent<BoxCollider>();
         gunTrigger.size = new Vector3(1, vertRange, range);
@@ -35,7 +40,13 @@ public class Gun : MonoBehaviour
         //check if can shoot(fire delay)
         if(Input.GetMouseButtonDown(0) && Time.time > timeToFire)
         {
-            fire();
+            CheckAmmo();
+        }
+        if(Input.GetKeyDown(KeyCode.R)){
+            if(reloadB){
+                Debug.Log("trying reload");
+                Reload();
+            }
         }
     }
 
@@ -54,8 +65,12 @@ public class Gun : MonoBehaviour
         GetComponent<AudioSource>().Play();
 
         //checks for each enemy in the trigger hit box
+        int hitTotal = 0;
         foreach (var enemy in enemyManager.enemiesInTrigger)
         {
+            if(hitTotal > piercing){
+                break;
+            }
             var dir = enemy.transform.position - transform.position;
             //checks for line of sight with enemies
             RaycastHit hit;
@@ -73,7 +88,7 @@ public class Gun : MonoBehaviour
                     {
                         enemy.TakeDamage(bigDmg);
                     }
-
+                    hitTotal += 1;
                     
                 }
             }
@@ -81,6 +96,45 @@ public class Gun : MonoBehaviour
         }
         
         timeToFire = Time.time + fireRate;
+    }
+
+    //reloads players gun to the highest possible ammount <= maxAmmo
+    public void Reload(){
+        //checks if gun is at maxAmmo
+        Debug.Log("line 104");
+        if(ammo < maxAmmo){
+            Debug.Log("line 106");
+            //reloads as much ammo as possible into the gun
+            for(int i = (maxAmmo-ammo); i >= 0; i--){
+                Debug.Log("checking "+i+" remSpores");
+                if(GetComponentInParent<PlayerHealth>().RemSpores(i)){
+                    ammo += i;
+                    Debug.Log("reloaded "+i+" ammo");
+                    return;
+                }
+            }
+        }
+        else{
+            Debug.Log("max ammo");
+        }
+    }
+
+    //checks if the gun can shoot and if true calls fire
+    private void CheckAmmo(){
+        //checks if gun is using ammo or spores
+        if(reloadB){
+            //checks if player has enough ammo to shoot
+            if(ammo > 0){
+                ammo -= 1;
+                fire();
+            }
+        }
+        else{
+            //checks if player has enough spores to shoot
+            if(GetComponentInParent<PlayerHealth>().RemSpores(1)){
+                fire();
+            }
+        }
     }
 
     private void OnTriggerEnter(Collider other)

@@ -9,7 +9,7 @@ public class PlayerMove : MonoBehaviour
     public Camera playerCamera;
 
     public float playerSpeed = 17f;
-    public float momentumDamping = 5;
+    public float momentumDamping = 10f;
 
     private CharacterController pCC;
 

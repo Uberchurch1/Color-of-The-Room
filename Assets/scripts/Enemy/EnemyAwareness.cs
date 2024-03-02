@@ -4,19 +4,26 @@ using UnityEngine;
 
 public class EnemyAwareness : MonoBehaviour
 {
+    public float awarenessRad = 8f;
     public Material aggroMat;
     public bool isAggro;
+    private Transform playerTransform;
 
-    private void Update() {
+    private void Start() {
+        playerTransform = FindObjectOfType<PlayerMove>().transform;
+    }
+
+    private void Update() 
+    {
+        var dist = Vector3.Distance(transform.position, playerTransform.position);
+        if(dist < awarenessRad){
+            isAggro = true;
+        }
+        
+
         if (isAggro){
             GetComponent<MeshRenderer>().material = aggroMat;
         }
     }
 
-    private void OnTriggerEnter(Collider other) {
-        if(other.transform.CompareTag("Player"))
-        {
-            isAggro = true;
-        }
-    }
 }
