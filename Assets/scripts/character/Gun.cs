@@ -5,8 +5,8 @@ using UnityEngine;
 public class Gun : MonoBehaviour
 {
 
-    public float smallDmg = 1f;
-    public float bigDmg = 2f;
+    public float smallDmg = 10f;
+    public float bigDmg = 30f;
     public float range = 20f;
     public float vertRange = 20f;
     public float fireRate = 1f;
@@ -65,7 +65,7 @@ public class Gun : MonoBehaviour
         GetComponent<AudioSource>().Play();
 
         //checks for each enemy in the trigger hit box
-        int hitTotal = 0;
+        int hitTotal = 0;//iterates to check amount of enemies already hit
         foreach (var enemy in enemyManager.enemiesInTrigger)
         {
             if(hitTotal > piercing){

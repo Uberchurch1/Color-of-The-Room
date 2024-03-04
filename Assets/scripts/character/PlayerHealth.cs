@@ -9,10 +9,13 @@ public class PlayerHealth : MonoBehaviour
     public int maxHealth = 100;
     public int spores = 0;
     private int health;
+
     // Start is called before the first frame update
     void Start()
     {
         health = maxHealth;
+        HudManager.Instance.updHealth(health);
+        HudManager.Instance.updSpores(spores);
     }
 
     // Update is called once per frame
@@ -22,6 +25,10 @@ public class PlayerHealth : MonoBehaviour
         RemSpores(10);}//test giving sporesd to the player REMOVE:
         if(Input.GetKeyDown(KeyCode.RightShift)){
         GiveSpores(10);}//test removing spores from the player REMOVE:
+        if(Input.GetKeyDown(KeyCode.LeftControl)){
+        DamagePlayer(10);}//test damaging the player REMOVE:
+        if(Input.GetKeyDown(KeyCode.RightControl)){
+        GiveHealth(10);}//test giving health to the player REMOVE:
     }
 
     //damages the player by int value damage
@@ -34,17 +41,13 @@ public class PlayerHealth : MonoBehaviour
             Scene currentScene = SceneManager.GetActiveScene();
             SceneManager.LoadScene(currentScene.buildIndex);//change this to death scene TODO:
         }
-    }
-
-    //test damage REMOVE:
-    private void TestDmg(int damage){
-            DamagePlayer(damage);
-            Debug.Log("player damaged by "+damage);
+        HudManager.Instance.updHealth(health);
     }
 
     public void GiveSpores(int amount)
     {
         spores += amount;
+        HudManager.Instance.updSpores(spores);
     }
 
     public bool RemSpores(int amount)
@@ -56,6 +59,7 @@ public class PlayerHealth : MonoBehaviour
             }
             else{
                 spores -= amount;
+                HudManager.Instance.updSpores(spores);
                 return true;
             }
         }
@@ -64,6 +68,7 @@ public class PlayerHealth : MonoBehaviour
             Debug.Log("Insufficient Spores");
             return false;
         }
+
         
     }
 
@@ -73,5 +78,6 @@ public class PlayerHealth : MonoBehaviour
         if(health > maxHealth){
             health = maxHealth;
         }
+        HudManager.Instance.updHealth(health);
     }
 }
