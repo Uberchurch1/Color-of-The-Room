@@ -8,6 +8,8 @@ public class Enemy : MonoBehaviour
     private EnemyManager enemyManager;
     public GameObject onHitEffect;
     public GameObject onDeathDrop;
+    public bool respawnable;
+    public GameObject enemyPrefab;
 
     private int dropAmount;
     private float enemyHealth;
@@ -15,11 +17,12 @@ public class Enemy : MonoBehaviour
     private Animator spriteAnim;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         enemyHealth = maxHealth;
         spriteAnim = GetComponentInChildren<Animator>();
         enemyManager = FindObjectOfType<EnemyManager>();
+        enemyManager.AddLiveEnemy(this);//adds enemy to world list when spawned
     }
 
     // Update is called once per frame
@@ -32,12 +35,19 @@ public class Enemy : MonoBehaviour
             dropAmount = Random.Range(0,5);
             //destroys object and removes enemy from list if enemy dies
             enemyManager.RemoveEnemy(this);
+            enemyManager.RemoveLiveEnemy(this);
+            //respawns enemy if allowed
+            if(respawnable){
+                Respawn();
+            }
             Destroy(gameObject);
+            enemyManager.CheckEndWave();
             //drops a random amount of spores 0-5 set from line 18
             if(dropAmount != 0){
                 onDeathDrop.GetComponent<ItemPickup>().amount = dropAmount;
                 Instantiate(onDeathDrop, transform.position, transform.rotation);
             }
+            
         }
     }
 
@@ -49,5 +59,11 @@ public class Enemy : MonoBehaviour
         Instantiate(onHitEffect, transform.position, transform.rotation);
         }
         enemyHealth -= damage;
+    }
+
+    //respawn itself MUST BE CALLED BEFORE DESTROY
+    private void Respawn()
+    {
+        Instantiate(enemyPrefab, transform.position, transform.rotation);
     }
 }
