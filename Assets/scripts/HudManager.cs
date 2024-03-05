@@ -18,6 +18,7 @@ public class HudManager : MonoBehaviour
     public Sprite health6;
     public Sprite health7;
     public Sprite health8;
+    public GameObject grabIndicator;
 
     private static HudManager _instance;
     public static HudManager Instance {
@@ -31,6 +32,7 @@ public class HudManager : MonoBehaviour
         else{
             _instance = this;
         }
+        grabIndicator.SetActive(false);
     }
     
     
@@ -71,5 +73,15 @@ public class HudManager : MonoBehaviour
     public void updSpores(int sporeVal)
     {
         spores.text = sporeVal.ToString();
+    }
+
+    public void ShowGrab()
+    {
+        grabIndicator.SetActive(true);
+    }
+
+    public void HideGrab()
+    {
+        grabIndicator.SetActive(false);
     }
 }

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5590506378430412536}
   - component: {fileID: 1229176259194696498}
   - component: {fileID: 8171935658201998668}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: ItemPickup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -67,7 +67,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53df28c502624c449bc19b038b2156e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  amount: 5
+  amount: 1
 --- !u!1 &6077773697200390755
 GameObject:
   m_ObjectHideFlags: 0
@@ -80,7 +80,7 @@ GameObject:
   - component: {fileID: 2460543998767124743}
   - component: {fileID: 8125422821864695763}
   - component: {fileID: 2120709720522858242}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
