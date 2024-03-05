@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,16 +10,14 @@ public class HudManager : MonoBehaviour
     public TextMeshProUGUI health;
     public TextMeshProUGUI spores;
 
+    public Image sporeIndicator;
     public Image healthIndicator;
-    public Sprite health1;
-    public Sprite health2;
-    public Sprite health3;
-    public Sprite health4;
-    public Sprite health5;
-    public Sprite health6;
-    public Sprite health7;
-    public Sprite health8;
+    public Sprite[] healthSheet;
+    public Sprite[] sporeSheet;
     public GameObject grabIndicator;
+    public Animator grabAnim;
+
+    private BabyManager babyMan;
 
     private static HudManager _instance;
     public static HudManager Instance {
@@ -29,59 +28,42 @@ public class HudManager : MonoBehaviour
         if(_instance != null && _instance != this){
             Destroy(this.gameObject);
         }
-        else{
+        else
+        {
             _instance = this;
         }
-        grabIndicator.SetActive(false);
+        babyMan = FindObjectOfType<BabyManager>().GetComponent<BabyManager>();
     }
     
     
-    public void updHealth(int healthVal)
+    public void UpdHealth(int healthVal)
     {
         health.text = healthVal.ToString();
-        updHealthInd(healthVal);
+        float index = (healthVal / 100f) * healthSheet.Length;
+        int Index = (int)Math.Floor(index);
+        healthIndicator.sprite = healthSheet[Index];
     }
 
-    public void updHealthInd(int healthVal)
-    {
-        if(healthVal >= 87){
-            healthIndicator.sprite = health1;
-        }
-        else if(healthVal >= 74){
-            healthIndicator.sprite = health2;
-        }
-        else if(healthVal >= 61){
-            healthIndicator.sprite = health3;
-        }
-        else if(healthVal >= 48){
-            healthIndicator.sprite = health4;
-        }
-        else if(healthVal >= 35){
-            healthIndicator.sprite = health5;
-        }
-        else if(healthVal >= 22){
-            healthIndicator.sprite = health6;
-        }
-        else if(healthVal >= 9){
-            healthIndicator.sprite = health7;
-        }
-        else{
-            healthIndicator.sprite = health8;
-        }
-    }
-
-    public void updSpores(int sporeVal)
+    public void UpdSpores(int sporeVal)
     {
         spores.text = sporeVal.ToString();
+        float index = (sporeVal / 100f) * sporeSheet.Length;
+        int Index = (int)Math.Floor(index);
+        sporeIndicator.sprite = sporeSheet[Index];
     }
 
     public void ShowGrab()
     {
-        grabIndicator.SetActive(true);
+        grabAnim.SetBool("HoverActive", true);
     }
 
     public void HideGrab()
     {
-        grabIndicator.SetActive(false);
+        grabAnim.SetBool("HoverActive", false);
+    }
+
+    public void GrabTrigger()
+    {
+        grabAnim.SetTrigger("GrabActive");
     }
 }

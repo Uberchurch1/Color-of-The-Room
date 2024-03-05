@@ -8,6 +8,7 @@ public class Grab : MonoBehaviour
     public BabyManager babyManager;
     public LayerMask raycastLayerMask;
     private BoxCollider grabTrigger;
+    public HudManager hudMan;
     
 
 
@@ -43,10 +44,12 @@ public class Grab : MonoBehaviour
             {
                 if(hit.transform == baby.transform)
                 {
+                    hudMan.GrabTrigger();
                     baby.Eat();
                     //play shoot audio
                     GetComponent<AudioSource>().Stop();
                     GetComponent<AudioSource>().Play();
+                    break;
                 }
             }
             hitTotal++;
@@ -66,6 +69,7 @@ public class Grab : MonoBehaviour
         Baby baby = other.transform.GetComponent<Baby>();
         if(baby){
             babyManager.RemoveBaby(baby);
+            
         }
     }
 }

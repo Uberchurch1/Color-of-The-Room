@@ -14,8 +14,8 @@ public class PlayerHealth : MonoBehaviour
     void Start()
     {
         health = maxHealth;
-        HudManager.Instance.updHealth(health);
-        HudManager.Instance.updSpores(spores);
+        HudManager.Instance.UpdHealth(health);
+        HudManager.Instance.UpdSpores(spores);
     }
 
     // Update is called once per frame
@@ -41,13 +41,13 @@ public class PlayerHealth : MonoBehaviour
             Scene currentScene = SceneManager.GetActiveScene();
             SceneManager.LoadScene(currentScene.buildIndex);//change this to death scene TODO:
         }
-        HudManager.Instance.updHealth(health);
+        HudManager.Instance.UpdHealth(health);
     }
 
     public void GiveSpores(int amount)
     {
         spores += amount;
-        HudManager.Instance.updSpores(spores);
+        HudManager.Instance.UpdSpores(spores);
     }
 
     public bool RemSpores(int amount)
@@ -59,7 +59,7 @@ public class PlayerHealth : MonoBehaviour
             }
             else{
                 spores -= amount;
-                HudManager.Instance.updSpores(spores);
+                HudManager.Instance.UpdSpores(spores);
                 return true;
             }
         }
@@ -78,6 +78,6 @@ public class PlayerHealth : MonoBehaviour
         if(health > maxHealth){
             health = maxHealth;
         }
-        HudManager.Instance.updHealth(health);
+        HudManager.Instance.UpdHealth(health);
     }
 }

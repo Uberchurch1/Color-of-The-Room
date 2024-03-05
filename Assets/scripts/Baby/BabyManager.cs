@@ -6,6 +6,7 @@ public class BabyManager : MonoBehaviour
 {
     public List<Baby> babiesInTrigger = new List<Baby>();
     public GameObject hudManager;
+    public Animator grabAnim;
 
     // Start is called before the first frame update
     void Start()
@@ -34,5 +35,10 @@ public class BabyManager : MonoBehaviour
         if(babiesInTrigger.Count == 0){
             hudManager.GetComponent<HudManager>().HideGrab();
         }
+    }
+
+    public int BabyCount()
+    {
+        return babiesInTrigger.Count;
     }
 }
