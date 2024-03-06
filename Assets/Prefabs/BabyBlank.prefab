@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8580950313819933753}
   - component: {fileID: 2302392469254858835}
   - component: {fileID: 6192803586006970063}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: EnemySprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -133,10 +133,8 @@ GameObject:
   - component: {fileID: 4384871452640895570}
   - component: {fileID: 4189718795287581229}
   - component: {fileID: 4096438558896809873}
-  - component: {fileID: 5152601164848001042}
   - component: {fileID: 5144341753210164611}
-  - component: {fileID: 6430404146296594005}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: BabyBlank
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -281,21 +279,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &5152601164848001042
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8705927737153739610}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a784d3c67dc803428349c8b3769956f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHealth: 100
-  onHitEffect: {fileID: 4252368205243203926, guid: 7bf865d09faf4cf43b58783d501b63f0, type: 3}
-  onDeathDrop: {fileID: 327813584732886060, guid: 8b4f29ec86f92f14588519ed213e0811, type: 3}
 --- !u!114 &5144341753210164611
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -311,15 +294,3 @@ MonoBehaviour:
   awarenessRad: 10
   aggroMat: {fileID: 2100000, guid: f9622a1485fbd5741943dc3201a4b6df, type: 2}
   isAggro: 0
---- !u!114 &6430404146296594005
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8705927737153739610}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a51da40002fda1544a7fcc7976dfabf0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

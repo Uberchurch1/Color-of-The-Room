@@ -8,11 +8,15 @@ public class PlayerHealth : MonoBehaviour
 {
     public int maxHealth = 100;
     public int spores = 0;
+    public AudioManager audioMan;
+    
     private int health;
+    private PlayerMove playerMove;
 
     // Start is called before the first frame update
     void Start()
     {
+        playerMove = GetComponent<PlayerMove>();
         health = maxHealth;
         HudManager.Instance.UpdHealth(health);
         HudManager.Instance.UpdSpores(spores);
@@ -29,6 +33,13 @@ public class PlayerHealth : MonoBehaviour
         DamagePlayer(10);}//test damaging the player REMOVE:
         if(Input.GetKeyDown(KeyCode.RightControl)){
         GiveHealth(10);}//test giving health to the player REMOVE:
+        
+        //convert spores into health
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            Debug.Log("q key down");//REMOVE:
+            StartCoroutine(HealCoroutine());
+        }
     }
 
     //damages the player by int value damage
@@ -79,5 +90,34 @@ public class PlayerHealth : MonoBehaviour
             health = maxHealth;
         }
         HudManager.Instance.UpdHealth(health);
+    }
+
+    private IEnumerator HealCoroutine()
+    {
+        Debug.Log("heal start");//REMOVE:
+        while (Input.GetKey(KeyCode.Q) && health != maxHealth && spores != 0)
+        {
+            
+            Debug.Log("health low");//REMOVE:
+            if (RemSpores(1))
+            {
+                if (!audioMan.CheckHealing())
+                {
+                    Debug.Log("not healing");//REMOVE:
+                    audioMan.StartCoroutine(audioMan.StartHeal());
+                }
+                Debug.Log("healing");//REMOVE:
+                playerMove.playerSpeed = 1f;
+                GiveHealth(1);
+                yield return new WaitForSeconds(0.1f);
+            }
+            yield return new WaitForSeconds(0.1f);
+        }
+
+        if (audioMan.CheckHealing())
+        {
+            audioMan.StartCoroutine(audioMan.StopHeal());
+        }
+        playerMove.playerSpeed = 17f;
     }
 }

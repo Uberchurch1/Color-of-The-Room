@@ -39,7 +39,7 @@ public class HudManager : MonoBehaviour
     public void UpdHealth(int healthVal)
     {
         health.text = healthVal.ToString();
-        float index = (healthVal / 100f) * healthSheet.Length;
+        float index = Math.Clamp((healthVal / 100f) * healthSheet.Length, 0, healthSheet.Length-1);
         int Index = (int)Math.Floor(index);
         healthIndicator.sprite = healthSheet[Index];
     }
@@ -47,7 +47,7 @@ public class HudManager : MonoBehaviour
     public void UpdSpores(int sporeVal)
     {
         spores.text = sporeVal.ToString();
-        float index = (sporeVal / 100f) * sporeSheet.Length;
+        float index = Math.Clamp((sporeVal / 100f) * sporeSheet.Length, 0, sporeSheet.Length-1);
         int Index = (int)Math.Floor(index);
         sporeIndicator.sprite = sporeSheet[Index];
     }
