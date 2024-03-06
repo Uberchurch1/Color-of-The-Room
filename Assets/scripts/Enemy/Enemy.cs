@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Enemy : MonoBehaviour
 {
@@ -10,7 +12,11 @@ public class Enemy : MonoBehaviour
     public GameObject onDeathDrop;
     public bool respawnable;
     public GameObject enemyPrefab;
+    public string enemyTypeS;
+    private int enemyTypeI;
+    public Sprite[] sprites;
 
+    private RoomManager roomMan;
     private int dropAmount;
     private float enemyHealth;
 
@@ -23,6 +29,8 @@ public class Enemy : MonoBehaviour
         spriteAnim = GetComponentInChildren<Animator>();
         enemyManager = FindObjectOfType<EnemyManager>();
         enemyManager.AddLiveEnemy(this);//adds enemy to world list when spawned
+        roomMan = FindObjectOfType<RoomManager>();
+        enemyTypeI = Array.IndexOf(roomMan.GetRoomList(), enemyTypeS);
     }
 
     // Update is called once per frame
@@ -65,5 +73,10 @@ public class Enemy : MonoBehaviour
     private void Respawn()
     {
         Instantiate(enemyPrefab, transform.position, transform.rotation);
+    }
+
+    public void BIGUPDAHOLEISLAND()//REMOVE:
+    {
+        Debug.Log("BIG UP DA HOLE ISLAND");
     }
 }
