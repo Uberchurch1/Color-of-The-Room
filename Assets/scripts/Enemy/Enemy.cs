@@ -81,7 +81,8 @@ public class Enemy : MonoBehaviour
                 Instantiate(onDeathDrop, transform.position, transform.rotation);
             }
             _enemyAttack.KillEnemy();
-            Destroy(gameObject);
+            gameObject.SetActive(false);
+            enemyManager.CheckActive();
             Debug.Log("destroyed");//REMOVE:
         }
     }

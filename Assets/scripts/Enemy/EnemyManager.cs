@@ -61,4 +61,16 @@ public class EnemyManager : MonoBehaviour
     {
         activeSpawners.Remove(spawner);
     }
+
+    public void CheckActive()
+    {
+        foreach (var enemy in enemiesInTrigger)
+        {
+            if (!enemy.isActiveAndEnabled)
+            {
+                RemoveEnemy(enemy);
+                Destroy(enemy);
+            }
+        }
+    }
 }
