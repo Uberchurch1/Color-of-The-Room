@@ -6,11 +6,11 @@ using UnityEngine.SceneManagement;
 
 public class PlayerHealth : MonoBehaviour
 {
-    public int maxHealth = 100;
+    public float maxHealth = 100;
     public int spores = 0;
     public AudioManager audioMan;
     
-    private int health;
+    private float health;
     private PlayerMove playerMove;
 
     // Start is called before the first frame update
@@ -18,7 +18,7 @@ public class PlayerHealth : MonoBehaviour
     {
         playerMove = GetComponent<PlayerMove>();
         health = maxHealth;
-        HudManager.Instance.UpdHealth(health);
+        HudManager.Instance.UpdHealth((int)health);
         HudManager.Instance.UpdSpores(spores);
     }
 
@@ -37,13 +37,13 @@ public class PlayerHealth : MonoBehaviour
         //convert spores into health
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            Debug.Log("q key down");//REMOVE:
+            //REMOVE:Debug.Log("q key down");
             StartCoroutine(HealCoroutine());
         }
     }
 
     //damages the player by int value damage
-    public void DamagePlayer(int damage)
+    public void DamagePlayer(float damage)
     {
         health -= damage;
         //checks if player has died and if true resets current scene
@@ -52,7 +52,7 @@ public class PlayerHealth : MonoBehaviour
             Scene currentScene = SceneManager.GetActiveScene();
             SceneManager.LoadScene(currentScene.buildIndex);//change this to death scene TODO:
         }
-        HudManager.Instance.UpdHealth(health);
+        HudManager.Instance.UpdHealth((int)health);
     }
 
     public void GiveSpores(int amount)
@@ -89,24 +89,24 @@ public class PlayerHealth : MonoBehaviour
         if(health > maxHealth){
             health = maxHealth;
         }
-        HudManager.Instance.UpdHealth(health);
+        HudManager.Instance.UpdHealth((int)health);
     }
 
     private IEnumerator HealCoroutine()
     {
-        Debug.Log("heal start");//REMOVE:
-        while (Input.GetKey(KeyCode.Q) && health != maxHealth && spores != 0)
+        //REMOVE:Debug.Log("heal start");
+        while (Input.GetKey(KeyCode.Q) && (int)health != (int)maxHealth && spores != 0)
         {
             
-            Debug.Log("health low");//REMOVE:
+            //REMOVE:Debug.Log("health low");
             if (RemSpores(1))
             {
                 if (!audioMan.CheckHealing())
                 {
-                    Debug.Log("not healing");//REMOVE:
+                    //REMOVE:Debug.Log("not healing");
                     audioMan.StartCoroutine(audioMan.StartHeal());
                 }
-                Debug.Log("healing");//REMOVE:
+                //REMOVE:Debug.Log("healing");
                 playerMove.playerSpeed = 1f;
                 GiveHealth(1);
                 yield return new WaitForSeconds(0.1f);

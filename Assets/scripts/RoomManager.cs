@@ -6,18 +6,20 @@ using UnityEngine;
 
 public class RoomManager : MonoBehaviour
 {
-    private string[] roomTypes;
+    public string[] roomTypes;
     private string currentRoom;
+    private int currentRoomI;
     
     // Start is called before the first frame update
     void Start()
     {
-        roomTypes = new string[] { "blue", "brown" };
+        currentRoom = roomTypes[0];
+        currentRoomI = 0;
     }
 
     public string[] GetRoomList()
     {
-        return roomTypes;
+       return roomTypes;
     }
 
     public string GetRoomTypeS()
@@ -32,6 +34,7 @@ public class RoomManager : MonoBehaviour
             if (roomTypes.Contains(roomType))
             {
                 currentRoom = roomType;
+                currentRoomI = Array.IndexOf(roomTypes, roomType);
                 return;
             }
             else
@@ -45,19 +48,22 @@ public class RoomManager : MonoBehaviour
         }
     }
     
-    public string GetRoomTypeI()
+    public int GetRoomTypeI()
     {
-        return currentRoom;
+        return currentRoomI;
     }
 
     public void SetRoomTypeI(int roomType)
     {
+        Debug.Log("setting type: "+roomType);//REMOVE:
         try
         {
-            if (roomTypes.Length < roomType)
+            Debug.Log("in try");//REMOVE:
+            if (roomTypes.Length > roomType)
             {
                 currentRoom = roomTypes[roomType];
-                return;
+                currentRoomI = roomType;
+                Debug.Log("set type: "+currentRoom+"("+currentRoomI+")");//REMOVE:
             }
             else
             {

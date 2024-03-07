@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class EnemySpawn : MonoBehaviour
 {
@@ -23,7 +24,7 @@ public class EnemySpawn : MonoBehaviour
     void Update()
     {
         if(waveTracker.CheckRequest()){
-            Debug.Log("wave checked true");//REMOVE:
+            //REMOVE:Debug.Log("wave checked true");
             StartWave(waveTracker.GetWaveCount());
         }
     }
@@ -43,7 +44,7 @@ public class EnemySpawn : MonoBehaviour
     private void StartWave(int waveCount)
     {
         waveTracker.SetOngoing();
-        Debug.Log("starting spawn wave #"+waveCount);//REMOVE:
+        //REMOVE:Debug.Log("starting spawn wave #"+waveCount);
         enemyManager.AddSpawner(this);//makes spawner active in enemyManager
         //spawns an enemy every spawnRate a waveCount amount of times
         StartCoroutine(waveCoroutine(waveCount));
@@ -55,7 +56,10 @@ public class EnemySpawn : MonoBehaviour
         int enemiesSpawned = 0;
         while(enemiesSpawned < waveCount){
             Debug.Log("spawning enemy #"+enemiesSpawned);//REMOVE:
-            SpawnEnemy(0);//change to random range between 0 and # of enemy types FIXME:
+            //REMOVE:Debug.Log("enemyType length = "+enemyTypes.Length);
+            int ranType = Random.Range(0, enemyTypes.Length);
+            Debug.Log("ranType = "+ranType);//REMOVE:
+            SpawnEnemy(ranType);//change to random range between 0 and # of enemy types FIXME:
             enemiesSpawned++;
             
             yield return new WaitForSeconds(spawnRate);

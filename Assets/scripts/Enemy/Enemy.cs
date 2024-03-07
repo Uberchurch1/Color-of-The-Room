@@ -7,55 +7,48 @@ using Random = UnityEngine.Random;
 public class Enemy : MonoBehaviour
 {
     public float maxHealth = 100f;
-    private EnemyManager enemyManager;
-    public GameObject onHitEffect;
-    public GameObject onDeathDrop;
+    private float enemyHealth;
+    public float atkRange = 1.5f;
+    public float enemyDmg = 5f;
+    public float atkSpeed = 1f;
     public bool respawnable;
     public GameObject enemyPrefab;
+    public GameObject onHitEffect;
+    public GameObject onDeathDrop;
     public string enemyTypeS;
     private int enemyTypeI;
-    public Sprite[] sprites;
 
-    private RoomManager roomMan;
+    private EnemyAttack _enemyAttack;
     private int dropAmount;
-    private float enemyHealth;
-
-    private Animator spriteAnim;
+    private RoomManager roomMan;
+    private EnemyManager enemyManager;
+    private Collider enemyCollider;
+    //private Animator spriteAnim; not used
 
     // Start is called before the first frame update
     void Awake()
     {
+        _enemyAttack = GetComponentInChildren<EnemyAttack>();
         enemyHealth = maxHealth;
-        spriteAnim = GetComponentInChildren<Animator>();
+        //spriteAnim = GetComponentInChildren<Animator>(); not used
         enemyManager = FindObjectOfType<EnemyManager>();
         enemyManager.AddLiveEnemy(this);//adds enemy to world list when spawned
         roomMan = FindObjectOfType<RoomManager>();
         enemyTypeI = Array.IndexOf(roomMan.GetRoomList(), enemyTypeS);
+        enemyCollider = GetComponent<CapsuleCollider>();
+        Debug.Log("spawned type: "+enemyTypeI);//REMOVE:
     }
 
     // Update is called once per frame
     void Update()
     {
-        //checks if enemy has any health left
-        if(enemyHealth <= 0)
+        if (IsInRoom())
         {
-            //calculates spore drop amount
-            dropAmount = Random.Range(0,5);
-            //destroys object and removes enemy from list if enemy dies
-            enemyManager.RemoveEnemy(this);
-            enemyManager.RemoveLiveEnemy(this);
-            //respawns enemy if allowed
-            if(respawnable){
-                Respawn();
-            }
-            Destroy(gameObject);
-            enemyManager.CheckEndWave();
-            //drops a random amount of spores 0-5 set from line 18
-            if(dropAmount != 0){
-                onDeathDrop.GetComponent<ItemPickup>().amount = dropAmount;
-                Instantiate(onDeathDrop, transform.position, transform.rotation);
-            }
-            
+            enemyCollider.enabled = true;
+        }
+        else
+        {
+            enemyCollider.enabled = false;
         }
     }
 
@@ -67,6 +60,30 @@ public class Enemy : MonoBehaviour
         Instantiate(onHitEffect, transform.position, transform.rotation);
         }
         enemyHealth -= damage;
+        //checks if enemy has any health left
+        if(enemyHealth <= 0)
+        {
+            Debug.Log(("health zero"));//REMOVE:
+            //calculates spore drop amount
+            dropAmount = Random.Range(0,5);
+            //destroys object and removes enemy from list if enemy dies
+            enemyManager.RemoveEnemy(this);
+            enemyManager.RemoveLiveEnemy(this);
+            //respawns enemy if allowed
+            if(respawnable){
+                Respawn();
+            }
+            Debug.Log("destroying");//REMOVE:
+            enemyManager.CheckEndWave();
+            //drops a random amount of spores 0-5 set from line 18
+            if(dropAmount != 0){
+                onDeathDrop.GetComponent<ItemPickup>().amount = dropAmount;
+                Instantiate(onDeathDrop, transform.position, transform.rotation);
+            }
+            _enemyAttack.KillEnemy();
+            Destroy(gameObject);
+            Debug.Log("destroyed");//REMOVE:
+        }
     }
 
     //respawn itself MUST BE CALLED BEFORE DESTROY
@@ -74,9 +91,26 @@ public class Enemy : MonoBehaviour
     {
         Instantiate(enemyPrefab, transform.position, transform.rotation);
     }
+    
+    public int GetTypeI()
+    {
+        return enemyTypeI;
+    }
 
+    public bool IsInRoom()
+    {
+        if (roomMan.GetRoomTypeI() == enemyTypeI)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    
     public void BIGUPDAHOLEISLAND()//REMOVE:
     {
-        Debug.Log("BIG UP DA HOLE ISLAND");
+        Debug.Log("BIG UP DA wHOLE ISLAND");
     }
 }

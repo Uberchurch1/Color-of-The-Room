@@ -7,7 +7,11 @@ public class EnemyAwareness : MonoBehaviour
     public float awarenessRad = 8f;
     public Material aggroMat;
     public bool isAggro;
+    
+   
+    
     private Transform playerTransform;
+    private float distToPLayer;
 
     private void Start() {
         playerTransform = FindObjectOfType<PlayerMove>().transform;
@@ -15,15 +19,17 @@ public class EnemyAwareness : MonoBehaviour
 
     private void Update() 
     {
-        var dist = Vector3.Distance(transform.position, playerTransform.position);
-        if(dist < awarenessRad){
+        distToPLayer = Vector3.Distance(transform.position, playerTransform.position);
+        if(distToPLayer <= awarenessRad){
             isAggro = true;
         }
-        
-
         if (isAggro){
             GetComponent<MeshRenderer>().material = aggroMat;
         }
+        
     }
+    
+    
 
+    
 }
