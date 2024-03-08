@@ -11,23 +11,33 @@ public class Enemy : MonoBehaviour
     public float atkRange = 1.5f;
     public float enemyDmg = 5f;
     public float atkSpeed = 1f;
+    public float moveSpeed = 7f;
+    public float forceMag = 100f;
     public bool respawnable;
     public GameObject enemyPrefab;
     public GameObject onHitEffect;
     public GameObject onDeathDrop;
+    public int maxDropAmt = 8;
     public string enemyTypeS;
+    
+    
     private int enemyTypeI;
-
+    private EnemyAI enemyAI;
     private EnemyAttack _enemyAttack;
     private int dropAmount;
     private RoomManager roomMan;
     private EnemyManager enemyManager;
+    private WaveTracker waveTracker;
     private Collider enemyCollider;
+    private Rigidbody rigidBody;
+    private Transform playerTransform;
     //private Animator spriteAnim; not used
 
     // Start is called before the first frame update
     void Awake()
     {
+        rigidBody = GetComponent<Rigidbody>();
+        playerTransform = FindObjectOfType<PlayerMove>().transform;
         _enemyAttack = GetComponentInChildren<EnemyAttack>();
         enemyHealth = maxHealth;
         //spriteAnim = GetComponentInChildren<Animator>(); not used
@@ -37,6 +47,11 @@ public class Enemy : MonoBehaviour
         enemyTypeI = Array.IndexOf(roomMan.GetRoomList(), enemyTypeS);
         enemyCollider = GetComponent<CapsuleCollider>();
         Debug.Log("spawned type: "+enemyTypeI);//REMOVE:
+        
+        waveTracker = FindObjectOfType<WaveTracker>();
+        enemyAI = GetComponent<EnemyAI>();
+        float speed = (float)(Math.Pow(waveTracker.GetWaveCount(),  2) * 0.05) + 7f;
+        enemyAI.ChangeSpeed(Math.Clamp(speed, 7f, 16.5f));
     }
 
     // Update is called once per frame
@@ -53,7 +68,7 @@ public class Enemy : MonoBehaviour
     }
 
     //applies damage to enemies
-    public void TakeDamage(float damage)
+    public void TakeDamage(float damage, bool melee)
     {
         //spawns blood particles based on amount of damage taken
         for(int i = 0; i <= damage; i += 15){
@@ -65,9 +80,10 @@ public class Enemy : MonoBehaviour
         {
             Debug.Log(("health zero"));//REMOVE:
             //calculates spore drop amount
-            dropAmount = Random.Range(0,5);
+            dropAmount = Random.Range(4,maxDropAmt);
             //destroys object and removes enemy from list if enemy dies
             enemyManager.RemoveEnemy(this);
+            enemyManager.RemoveMeleeEnemy(this);
             enemyManager.RemoveLiveEnemy(this);
             //respawns enemy if allowed
             if(respawnable){
@@ -82,9 +98,15 @@ public class Enemy : MonoBehaviour
             }
             _enemyAttack.KillEnemy();
             gameObject.SetActive(false);
-            enemyManager.CheckActive();
+            enemyManager.DestroyInactive();
             Debug.Log("destroyed");//REMOVE:
         }
+
+        //if (melee)
+        //{
+        //    Debug.Log("melee true");//REMOVE:
+        //    rigidBody.AddForce(-transform.forward * forceMag, ForceMode.Force);
+        //}
     }
 
     //respawn itself MUST BE CALLED BEFORE DESTROY
@@ -109,7 +131,12 @@ public class Enemy : MonoBehaviour
             return false;
         }
     }
-    
+
+    void OnDisable()
+    {
+        Destroy(gameObject);
+    }
+
     public void BIGUPDAHOLEISLAND()//REMOVE:
     {
         Debug.Log("BIG UP DA wHOLE ISLAND");

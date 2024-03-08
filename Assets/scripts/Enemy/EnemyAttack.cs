@@ -29,10 +29,13 @@ public class EnemyAttack : MonoBehaviour
         Debug.Log("starting atkCoroutine");//REMOVE:
         while (inAtkRange)
         {  
-            Debug.Log("damaging player");//REMOVE:
-            player.DamagePlayer(enemyDmg);
-            yield return new WaitForSeconds(atkSpeed);
-            Debug.Log("returned to coroutine");//REMOVE:
+            yield return new WaitForSeconds(atkSpeed*0.2f);
+            Debug.Log("returned to coroutine"); //REMOVE:
+            if (inAtkRange)
+            {
+                Debug.Log("damaging player"); //REMOVE:
+                player.DamagePlayer(enemyDmg);
+            }
         }
     }
     private void OnTriggerEnter(Collider other)

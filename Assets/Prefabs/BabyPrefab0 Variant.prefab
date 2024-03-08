@@ -10,7 +10,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5605472121012323079, guid: 1168f871146573341ac88d4f33bb1c06, type: 3}
       propertyPath: m_Name
-      value: BabyPrefab Variant
+      value: BabyPrefab0 Variant
       objectReference: {fileID: 0}
     - target: {fileID: 7428816743102646680, guid: 1168f871146573341ac88d4f33bb1c06, type: 3}
       propertyPath: m_LocalPosition.x

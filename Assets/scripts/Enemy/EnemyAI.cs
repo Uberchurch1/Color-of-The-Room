@@ -27,4 +27,10 @@ public class EnemyAI : MonoBehaviour
             enemyNavMesh.SetDestination(transform.position);
         }
     }
+
+    public void ChangeSpeed(float speed)
+    {
+        enemyNavMesh = GetComponent<NavMeshAgent>();
+        enemyNavMesh.speed = speed;
+    }
 }

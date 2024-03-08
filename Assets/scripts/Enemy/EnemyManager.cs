@@ -7,11 +7,16 @@ public class EnemyManager : MonoBehaviour
 
     public List<Enemy> enemiesInTrigger = new List<Enemy>();//enemies in gun hitbox
     public List<Enemy> enemiesAlive = new List<Enemy>();//enemies currently in world
+    private List<Enemy> enemiesInMelee = new List<Enemy>();//enemies in melee hitbox
     private WaveTracker waveTracker;
     private List<EnemySpawn> activeSpawners = new List<EnemySpawn>();
+    public HudManager hudMan;
+    private PlayerHealth player;
     
     private void Start() {
         waveTracker = GetComponent<WaveTracker>();
+        player = FindObjectOfType<PlayerHealth>();
+        StartCoroutine(CheckActiveCoroutine());
     }
 
     private void Update() 
@@ -25,7 +30,10 @@ public class EnemyManager : MonoBehaviour
         Debug.Log("checking end wave");//REMOVE:
         if(enemiesAlive.Count == 0 && activeSpawners.Count == 0){
             Debug.Log("end wave = true");//REMOVE:
-            waveTracker.EndWave();
+            
+            waveTracker.waveOngoing = false;
+            Debug.Log("ongoing = false");//REMOVE:
+            StartCoroutine(waveTracker.EndWave());
         }
     }
 
@@ -38,6 +46,34 @@ public class EnemyManager : MonoBehaviour
     public void RemoveEnemy(Enemy enemy)
     {
         enemiesInTrigger.Remove(enemy);
+    }
+    
+    //add/remove enemies from melee hitbox
+    public void AddMeleeEnemy(Enemy enemy)
+    {
+        enemiesInMelee.Add(enemy);
+        hudMan.ShowGrab();
+    }
+    
+    public void RemoveMeleeEnemy(Enemy enemy)
+    {
+        enemiesInMelee.Remove(enemy);
+        hudMan.HideGrab();
+    }
+    
+    public int EnemyMeleeCount()
+    {
+        return enemiesInMelee.Count;
+    }
+
+    public void MeleeDamge(float damage)
+    {
+        hudMan.GrabTrigger();
+        foreach (var enemy in enemiesInMelee)
+        {
+            enemy.TakeDamage(damage, true);
+            player.GiveHealth(1);
+        }
     }
 
     //add/remove enemies from world list
@@ -62,7 +98,24 @@ public class EnemyManager : MonoBehaviour
         activeSpawners.Remove(spawner);
     }
 
-    public void CheckActive()
+    private IEnumerator CheckActiveCoroutine()
+    {
+        while (true)
+        {
+            enemiesInTrigger.RemoveAll(enemy => enemy == null);
+            
+
+            enemiesInMelee.RemoveAll(enemy => enemy == null);
+            
+
+            enemiesAlive.RemoveAll(enemy => enemy == null);
+            
+
+            yield return new WaitForSeconds(0.1f);
+        }
+    }
+
+    public void DestroyInactive()
     {
         foreach (var enemy in enemiesInTrigger)
         {
@@ -72,5 +125,22 @@ public class EnemyManager : MonoBehaviour
                 Destroy(enemy);
             }
         }
+        foreach (var enemy in enemiesInMelee)
+        {
+            if (!enemy.isActiveAndEnabled)
+            {
+                RemoveMeleeEnemy(enemy);
+                Destroy(enemy);
+            }
+        }
+        foreach (var enemy in enemiesAlive)
+        {
+            if (!enemy.isActiveAndEnabled)
+            {
+                RemoveLiveEnemy(enemy);
+                Destroy(enemy);
+            }
+        }
     }
+
 }

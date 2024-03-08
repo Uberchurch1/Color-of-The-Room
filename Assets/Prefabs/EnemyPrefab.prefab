@@ -102,7 +102,7 @@ NavMeshAgent:
   m_AgentTypeID: 0
   m_Radius: 0.5
   m_Speed: 7
-  m_Acceleration: 8
+  m_Acceleration: 15
   avoidancePriority: 50
   m_AngularSpeed: 120
   m_StoppingDistance: 0
@@ -177,12 +177,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   atkRange: 1.5
-  enemyDmg: 5
+  enemyDmg: 7
   atkSpeed: 1
+  forceMag: 100
   respawnable: 0
   enemyPrefab: {fileID: 5745345702255984452}
   onHitEffect: {fileID: 4252368205243203926, guid: 7bf865d09faf4cf43b58783d501b63f0, type: 3}
   onDeathDrop: {fileID: 327813584732886060, guid: 8b4f29ec86f92f14588519ed213e0811, type: 3}
+  maxDropAmt: 8
   enemyTypeS: 
 --- !u!114 &1028814221974693606
 MonoBehaviour:
@@ -196,7 +198,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1842f090614360c44ad2090b8b9aaccc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  awarenessRad: 10
+  awarenessRad: 15
   aggroMat: {fileID: 2100000, guid: f9622a1485fbd5741943dc3201a4b6df, type: 2}
   isAggro: 0
 --- !u!114 &7148972249603222059

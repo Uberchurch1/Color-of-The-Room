@@ -14,6 +14,9 @@ public class AudioManager : MonoBehaviour
     public AudioSource inhaleLoop;
     private bool isHealing = false;
 
+    public AudioClip[] meleeHits;
+    public AudioClip[] meleeAirs;
+
     public IEnumerator StartHeal()
     {
         ClearAudio();
@@ -49,5 +52,15 @@ public class AudioManager : MonoBehaviour
     {
         oneShots.Stop();
         inhaleLoop.Stop();
+    }
+    
+    public void MeleeHit()
+    {
+        oneShots.PlayOneShot(meleeHits[Random.Range(0,coughs.Length-1)]);
+    }
+
+    public void MeleeAir()
+    {
+        oneShots.PlayOneShot(meleeAirs[Random.Range(0,coughs.Length-1)]);
     }
 }

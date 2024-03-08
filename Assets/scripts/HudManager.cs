@@ -18,6 +18,7 @@ public class HudManager : MonoBehaviour
     public Animator grabAnim;
 
     private BabyManager babyMan;
+    private EnemyManager enemyMan;
 
     private static HudManager _instance;
     public static HudManager Instance {
@@ -33,6 +34,7 @@ public class HudManager : MonoBehaviour
             _instance = this;
         }
         babyMan = FindObjectOfType<BabyManager>().GetComponent<BabyManager>();
+        enemyMan = FindObjectOfType<EnemyManager>().GetComponent<EnemyManager>();
     }
     
     
@@ -59,7 +61,10 @@ public class HudManager : MonoBehaviour
 
     public void HideGrab()
     {
-        grabAnim.SetBool("HoverActive", false);
+        if ((enemyMan.EnemyMeleeCount() == 0) && (babyMan.BabyCount() == 0))
+        {
+            grabAnim.SetBool("HoverActive", false);
+        }
     }
 
     public void GrabTrigger()

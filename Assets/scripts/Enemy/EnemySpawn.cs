@@ -23,16 +23,17 @@ public class EnemySpawn : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(waveTracker.CheckRequest()){
-            //REMOVE:Debug.Log("wave checked true");
-            StartWave(waveTracker.GetWaveCount());
-        }
+        //if(waveTracker.CheckRequest()){
+        //    //REMOVE:Debug.Log("wave checked true");
+        //    StartWave(waveTracker.GetWaveCount());
+        //}
     }
 
     //spawn an enemy with type indexed from array enemyTypes
     private void SpawnEnemy(int enType)
     {
-        Instantiate(enemyTypes[enType], transform.position, Quaternion.identity);
+        Vector3 randVec = new Vector3(Random.Range(-spawnRange, spawnRange), 0, Random.Range(-spawnRange, spawnRange));
+        Instantiate(enemyTypes[enType], transform.position+randVec, Quaternion.identity);
     }
 
     //spawn an enemy with type indexed from array enemyTypes
@@ -41,7 +42,7 @@ public class EnemySpawn : MonoBehaviour
         Instantiate(enemyBlank, transform.position, Quaternion.identity);
     }
 
-    private void StartWave(int waveCount)
+    public void StartWave(int waveCount)
     {
         waveTracker.SetOngoing();
         //REMOVE:Debug.Log("starting spawn wave #"+waveCount);

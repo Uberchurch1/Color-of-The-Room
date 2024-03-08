@@ -5,8 +5,11 @@ using UnityEngine;
 public class WaveTracker : MonoBehaviour
 {
     private int waveCount;
+    public EnemySpawn[] spawners;
     public bool waveOngoing;
     public bool waveRequest;
+    public bool waveRepeat = false;
+    public float waveDelay = 4f;
 
     // Start is called before the first frame update
     void Start()
@@ -20,7 +23,7 @@ public class WaveTracker : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.LeftBracket)){
             Debug.Log("end key down");
-            EndWave();}//test giving sporesd to the player REMOVE:
+            StartCoroutine(EndWave());}//test giving sporesd to the player REMOVE:
         if(Input.GetKeyDown(KeyCode.RightBracket)){
             Debug.Log("start key down");
             StartWave();}//test removing spores from the player REMOVE:
@@ -31,17 +34,23 @@ public class WaveTracker : MonoBehaviour
         Debug.Log("starting wave");//REMOVE:
         waveCount++;
         Debug.Log("count++");//REMOVE:
-        waveRequest = true;
+        foreach (var spawner in spawners)
+        {
+            spawner.StartWave(waveCount);
+        }
         Debug.Log("ongoing = true");//REMOVE:
     }
 
-    public void EndWave()
+    public IEnumerator EndWave()
     {
         Debug.Log("ending wave");//REMOVE:
-        waveOngoing = false;
-        Debug.Log("ongoing = false");//REMOVE:
+        if (waveRepeat && !waveOngoing)
+        {
+            yield return new WaitForSeconds(waveDelay);
+            StartWave();
+        }
     }
-
+    
     public bool CheckWave()
     {
         return waveOngoing;
