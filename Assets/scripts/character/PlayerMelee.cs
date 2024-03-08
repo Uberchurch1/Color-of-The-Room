@@ -26,7 +26,7 @@ public class PlayerMelee : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.V) && Time.time > timeToHit)
+        if (Input.GetKeyDown(KeyCode.Space) && Time.time > timeToHit)
         {
             Attack();
         }

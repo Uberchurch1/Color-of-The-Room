@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,6 +17,11 @@ public class WaveTracker : MonoBehaviour
     {
         waveCount = 0;
         waveOngoing = false;
+    }
+
+    private void Awake()
+    {
+        //StartWave();
     }
 
     // Update is called once per frame

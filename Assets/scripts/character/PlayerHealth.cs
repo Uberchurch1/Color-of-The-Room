@@ -25,19 +25,19 @@ public class PlayerHealth : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.LeftShift)){
+        if(Input.GetKeyDown(KeyCode.O)){
         RemSpores(10);}//test giving sporesd to the player REMOVE:
-        if(Input.GetKeyDown(KeyCode.RightShift)){
+        if(Input.GetKeyDown(KeyCode.P)){
         GiveSpores(10);}//test removing spores from the player REMOVE:
-        if(Input.GetKeyDown(KeyCode.LeftControl)){
+        if(Input.GetKeyDown(KeyCode.U)){
         DamagePlayer(10);}//test damaging the player REMOVE:
-        if(Input.GetKeyDown(KeyCode.RightControl)){
+        if(Input.GetKeyDown(KeyCode.I)){
         GiveHealth(10);}//test giving health to the player REMOVE:
         
         //convert spores into health
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.LeftShift))
         {
-            //REMOVE:Debug.Log("q key down");
+            Debug.Log("shift key down");//REMOVE:
             StartCoroutine(HealCoroutine());
         }
     }
@@ -95,7 +95,7 @@ public class PlayerHealth : MonoBehaviour
     private IEnumerator HealCoroutine()
     {
         //REMOVE:Debug.Log("heal start");
-        while (Input.GetKey(KeyCode.Q) && (int)health != (int)maxHealth && spores != 0)
+        while (Input.GetKey(KeyCode.LeftShift) && (int)health != (int)maxHealth && spores != 0)
         {
             
             //REMOVE:Debug.Log("health low");
@@ -107,8 +107,8 @@ public class PlayerHealth : MonoBehaviour
                     audioMan.StartCoroutine(audioMan.StartHeal());
                 }
                 //REMOVE:Debug.Log("healing");
-                playerMove.playerSpeed = 1f;
-                GiveHealth(1);
+                playerMove.playerSpeed = 5f;
+                GiveHealth(2);
                 yield return new WaitForSeconds(0.1f);
             }
             yield return new WaitForSeconds(0.1f);
