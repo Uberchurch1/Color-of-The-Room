@@ -179,6 +179,7 @@ MonoBehaviour:
   atkRange: 1.5
   enemyDmg: 7
   atkSpeed: 1
+  moveSpeed: 7
   forceMag: 100
   respawnable: 0
   enemyPrefab: {fileID: 5745345702255984452}
@@ -256,10 +257,10 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 512
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 448
+    m_Bits: 503
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0

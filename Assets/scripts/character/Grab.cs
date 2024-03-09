@@ -24,35 +24,21 @@ public class Grab : MonoBehaviour
     void Update()
     {
         if(Input.GetKeyDown(KeyCode.E)){
-            TryGrab();
+            TryEat();
         }
     }
 
-    private void TryGrab()
+    private void TryEat()
     {
         //checks only the first baby
-        int hitTotal = 0;
         foreach (var baby in babyManager.babiesInTrigger)
         {
-            if(hitTotal > 0){
-                break;
-            }
-            var dir = baby.transform.position - transform.position;
-            //checks for line of sight with enemies
-            RaycastHit hit;
-            if(Physics.Raycast(transform.position, dir, out hit, range*2f, raycastLayerMask))//can multiply range to reach corners but will overextend
-            {
-                if(hit.transform == baby.transform)
-                {
-                    hudMan.GrabTrigger();
-                    baby.Eat();
-                    //play shoot audio
-                    GetComponent<AudioSource>().Stop();
-                    GetComponent<AudioSource>().Play();
-                    break;
-                }
-            }
-            hitTotal++;
+            hudMan.GrabTrigger();
+            baby.Eat();
+            //play eat audio
+            GetComponent<AudioSource>().Stop();
+            GetComponent<AudioSource>().Play();
+            break;
         }
     }
 
@@ -69,7 +55,6 @@ public class Grab : MonoBehaviour
         Baby baby = other.transform.GetComponent<Baby>();
         if(baby){
             babyManager.RemoveBaby(baby);
-            
         }
     }
 }

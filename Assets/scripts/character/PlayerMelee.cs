@@ -36,7 +36,9 @@ public class PlayerMelee : MonoBehaviour
     {
         if (enemyManager.EnemyMeleeCount() != 0)
         { 
-            audioMan.MeleeHit();
+            //play eat audio
+            GetComponent<AudioSource>().Stop();
+            GetComponent<AudioSource>().Play();
             enemyManager.MeleeDamge(damage); 
         }
         else

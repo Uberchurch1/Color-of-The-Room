@@ -3,10 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class EnvironmentManager : MonoBehaviour
 {
-    public Material[] environMats;
+    public Material[] environMats0;
+    public Material[] environMats0B;
+    public Material[] environMats1;
+    private float[] timings0 = new float[11] { .25f, .2f, .2f, .15f, .15f, .15f, .15f, .15f, .2f, .2f, .25f };
+    private float[] timings1 = new float[5] { .2f, .2f, .2f, .2f, .2f};
     private Material environMat;
     private GameObject[] environObjects;
     private RoomManager roomMan;
@@ -20,16 +25,77 @@ public class EnvironmentManager : MonoBehaviour
         {
             environObjects[i] = transform.GetChild(i).gameObject;
         }
+
+        StartCoroutine(WallCoroutine0());
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (roomMan.GetRoomTypeI() != environRoom)
+        
+    }
+
+    public void ChangeWall(int room)
+    {
+        StopAllCoroutines();
+        if (room == 0)
         {
-            environRoom = roomMan.GetRoomTypeI();
-            environMat = environMats[environRoom];
-            UpdMats();
+            StartCoroutine(WallCoroutine0());
+        }
+        else
+        {
+            StartCoroutine(WallCoroutine1());
+        }
+    }
+
+    private IEnumerator WallCoroutine0()
+    {
+        while (roomMan.GetRoomTypeI() == 0)
+        {
+            for (int i = 0; i < environMats0.Length; i++)
+            {
+                environMat = environMats0[i];
+                UpdMats();
+                yield return new WaitForSeconds(timings0[i]);
+            }
+            for (int i = environMats0.Length-2; i > 0; i--)
+            {
+                if (i == 7 && Random.Range(0, 2) == 0)
+                {
+                    for (int j = 0; j < environMats0B.Length; j++)
+                    {
+                        environMat = environMats0B[j];
+                        UpdMats();
+                        yield return new WaitForSeconds(.15f);
+                        i--;
+                    }
+                }
+                else
+                {
+                    environMat = environMats0[i];
+                    UpdMats();
+                    yield return new WaitForSeconds(timings0[i]);
+                }
+            }
+        }
+    }
+    
+    private IEnumerator WallCoroutine1()
+    {
+        while (roomMan.GetRoomTypeI() == 1)
+        {
+            for (int i = 0; i < environMats1.Length; i++)
+            {
+                environMat = environMats1[i];
+                UpdMats();
+                yield return new WaitForSeconds(timings1[i]);
+            }
+            for (int i = environMats1.Length-2; i > 0; i--)
+            {
+                environMat = environMats1[i];
+                UpdMats();
+                yield return new WaitForSeconds(timings1[i]);
+            }
         }
     }
 

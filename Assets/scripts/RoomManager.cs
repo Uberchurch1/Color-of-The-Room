@@ -9,13 +9,16 @@ public class RoomManager : MonoBehaviour
     public string[] roomTypes;
     private string currentRoom;
     private int currentRoomI;
+    private EnvironmentManager environMan;
     
     // Start is called before the first frame update
     void Start()
     {
+        environMan = FindObjectOfType<EnvironmentManager>();
         currentRoom = roomTypes[0];
         currentRoomI = 0;
     }
+
 
     public string[] GetRoomList()
     {
@@ -64,6 +67,7 @@ public class RoomManager : MonoBehaviour
                 currentRoom = roomTypes[roomType];
                 currentRoomI = roomType;
                 Debug.Log("set type: "+currentRoom+"("+currentRoomI+")");//REMOVE:
+                environMan.ChangeWall(roomType);
             }
             else
             {
