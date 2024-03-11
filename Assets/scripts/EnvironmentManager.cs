@@ -15,7 +15,6 @@ public class EnvironmentManager : MonoBehaviour
     private Material environMat;
     private GameObject[] environObjects;
     private RoomManager roomMan;
-    private int environRoom = -1;
     // Start is called before the first frame update
     void Start()
     {

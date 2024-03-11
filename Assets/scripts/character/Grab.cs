@@ -1,16 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Grab : MonoBehaviour
 {
     public float range = 1.5f;
-    public BabyManager babyManager;
     public LayerMask raycastLayerMask;
     private BoxCollider grabTrigger;
-    public HudManager hudMan;
     
-
+    private HudManager hudMan;
+    private BabyManager babyManager;
+    private SceneSwitcher _sceneSwitcher;
 
     // Start is called before the first frame update
     void Start()
@@ -24,29 +25,75 @@ public class Grab : MonoBehaviour
     void Update()
     {
         if(Input.GetKeyDown(KeyCode.E)){
-            TryEat();
+            if (!TryEat())
+            {
+                TryOpen();
+            }
         }
     }
-
-    private void TryEat()
+    private void OnEnable()
     {
-        //checks only the first baby
-        foreach (var baby in babyManager.babiesInTrigger)
+        SceneManager.sceneLoaded += OnSceneLoad;
+    }
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoad;
+    }
+
+    private void OnSceneLoad(Scene scene, LoadSceneMode mode)
+    {
+        _sceneSwitcher = FindObjectOfType<SceneSwitcher>();
+        hudMan = FindObjectOfType<HudManager>();
+        babyManager = FindObjectOfType<BabyManager>();
+    }
+
+    private bool TryEat()
+    {
+        if (babyManager.babiesInTrigger.Count != 0)
         {
-            hudMan.GrabTrigger();
-            baby.Eat();
-            //play eat audio
-            GetComponent<AudioSource>().Stop();
-            GetComponent<AudioSource>().Play();
-            break;
+            //checks only the first baby
+            foreach (var baby in babyManager.babiesInTrigger)
+            {
+                hudMan.GrabTriggerCoroutine();
+                baby.Eat();
+                //play eat audio
+                GetComponent<AudioSource>().Stop();
+                GetComponent<AudioSource>().Play();
+                return true;
+            }
         }
+        else
+        {
+            return false;
+        }
+
+        return false;
+    }
+
+    private bool TryOpen()
+    {
+        foreach (var door in babyManager.doorsInTrigger)
+        {
+            hudMan.GrabTriggerCoroutine();
+            return door.Open();
+        }
+        Debug.Log("did not try open");//REMOVE:
+        return false;
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log("grab entered: "+other);//REMOVE:
         Baby baby = other.transform.GetComponent<Baby>();
         if(baby){
             babyManager.AddBaby(baby);
+            Debug.Log("added baby");//REMOVE:
+        }
+
+        Door door = other.transform.GetComponent<Door>();
+        if(door){
+            babyManager.AddDoor(door);
+            Debug.Log("added door");//REMOVE:
         }
     }
 
@@ -55,6 +102,11 @@ public class Grab : MonoBehaviour
         Baby baby = other.transform.GetComponent<Baby>();
         if(baby){
             babyManager.RemoveBaby(baby);
+        }
+        
+        Door door = other.transform.GetComponent<Door>();
+        if(door){
+            babyManager.RemoveDoor(door);
         }
     }
 }

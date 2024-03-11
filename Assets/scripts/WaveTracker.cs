@@ -10,7 +10,7 @@ public class WaveTracker : MonoBehaviour
     public bool waveOngoing;
     public bool waveRequest;
     public bool waveRepeat = false;
-    public float waveDelay = 4f;
+    public float waveDelay = 5f;
 
     // Start is called before the first frame update
     void Start()
@@ -37,9 +37,8 @@ public class WaveTracker : MonoBehaviour
 
     public void StartWave()
     {
-        Debug.Log("starting wave");//REMOVE:
         waveCount++;
-        Debug.Log("count++");//REMOVE:
+        Debug.Log("starting wave #"+waveCount);//REMOVE:
         foreach (var spawner in spawners)
         {
             spawner.StartWave(waveCount);
@@ -52,6 +51,8 @@ public class WaveTracker : MonoBehaviour
         Debug.Log("ending wave");//REMOVE:
         if (waveRepeat && !waveOngoing)
         {
+            yield return new WaitForSeconds(2f);
+            HudManager.Instance.StartCoroutine(HudManager.Instance.CountdownCoroutine());
             yield return new WaitForSeconds(waveDelay);
             StartWave();
         }
@@ -65,6 +66,12 @@ public class WaveTracker : MonoBehaviour
     public bool CheckRequest()
     {
         return waveRequest;
+    }
+
+    public void ResetWaveCount(int count = 0)
+    {
+        Debug.Log("reset wave count to "+count);
+        waveCount = count;
     }
 
     public int GetWaveCount()

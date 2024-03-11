@@ -26,14 +26,6 @@ public class EnemySpriteAnimator : MonoBehaviour
         transform.LookAt(modTarget);
         spriteAnim.SetInteger("EnemyType", parent.GetTypeI());
         spriteAnim.SetBool("ShowEnemy", parent.IsInRoom());
-        if (parent.IsInRoom())
-        {
-            spriteRenderer.enabled = true;
-        }
-        else
-        {
-            spriteRenderer.enabled = false;
-        }
     }
     
 }

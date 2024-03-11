@@ -17,7 +17,8 @@ public class Enemy : MonoBehaviour
     public GameObject enemyPrefab;
     public GameObject onHitEffect;
     public GameObject onDeathDrop;
-    public int maxDropAmt = 8;
+    public int maxDropAmt = 4;
+    public int minDropAmt = 0;
     public string enemyTypeS;
     
     
@@ -30,28 +31,35 @@ public class Enemy : MonoBehaviour
     private WaveTracker waveTracker;
     private Collider enemyCollider;
     private Rigidbody rigidBody;
+    private PlayerHealth player;
     private Transform playerTransform;
+    private AudioSource walkSource;
+    private SpriteRenderer _spriteRenderer;
     //private Animator spriteAnim; not used
 
     // Start is called before the first frame update
     void Awake()
     {
+        _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        walkSource = GetComponent<AudioSource>();
         rigidBody = GetComponent<Rigidbody>();
-        playerTransform = FindObjectOfType<PlayerMove>().transform;
+        player = FindObjectOfType<PlayerHealth>();
+        playerTransform = player.transform;
         _enemyAttack = GetComponentInChildren<EnemyAttack>();
-        enemyHealth = maxHealth;
-        //spriteAnim = GetComponentInChildren<Animator>(); not used
+        _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         enemyManager = FindObjectOfType<EnemyManager>();
         enemyManager.AddLiveEnemy(this);//adds enemy to world list when spawned
         roomMan = FindObjectOfType<RoomManager>();
         enemyTypeI = Array.IndexOf(roomMan.GetRoomList(), enemyTypeS);
         enemyCollider = GetComponent<CapsuleCollider>();
-        Debug.Log("spawned type: "+enemyTypeI);//REMOVE:
+        //REMOVE:Debug.Log("spawned type: "+enemyTypeI);
         
         waveTracker = FindObjectOfType<WaveTracker>();
         enemyAI = GetComponent<EnemyAI>();
-        float speed = (float)(Math.Pow(waveTracker.GetWaveCount(),  2) * 0.05) + 7f;
+        float speed = (float)(Math.Pow(waveTracker.GetWaveCount()+ (enemyManager.GetRoundCount() * 5),  2) * 0.05) + 7f;
         enemyAI.ChangeSpeed(Math.Clamp(speed, 7f, 16.5f));
+        maxHealth += waveTracker.GetWaveCount();
+        enemyHealth = maxHealth;
     }
 
     // Update is called once per frame
@@ -59,11 +67,25 @@ public class Enemy : MonoBehaviour
     {
         if (IsInRoom())
         {
+            _spriteRenderer.color =
+                new Color(_spriteRenderer.color.r, _spriteRenderer.color.g, _spriteRenderer.color.b, 1f);
+            _spriteRenderer.enabled = true;
             enemyCollider.enabled = true;
+            walkSource.enabled = true;
         }
         else
         {
+            if (player.seeking)
+            {
+                _spriteRenderer.enabled = true;
+                _spriteRenderer.color = new Color(1, 1, 1, 0.5f);
+            }
+            else
+            {
+                _spriteRenderer.enabled = false;
+            }
             enemyCollider.enabled = false;
+            walkSource.enabled = false;
         }
     }
 
@@ -75,12 +97,13 @@ public class Enemy : MonoBehaviour
         Instantiate(onHitEffect, transform.position, transform.rotation);
         }
         enemyHealth -= damage;
+        StartCoroutine(DmgFlashCoroutine());
         //checks if enemy has any health left
         if(enemyHealth <= 0)
         {
             Debug.Log(("health zero"));//REMOVE:
             //calculates spore drop amount
-            dropAmount = Random.Range(4,maxDropAmt);
+            dropAmount = Random.Range(minDropAmt,maxDropAmt);
             //destroys object and removes enemy from list if enemy dies
             enemyManager.RemoveEnemy(this);
             enemyManager.RemoveMeleeEnemy(this);
@@ -89,8 +112,8 @@ public class Enemy : MonoBehaviour
             if(respawnable){
                 Respawn();
             }
-            Debug.Log("destroying");//REMOVE:
-            enemyManager.CheckEndWave();
+            //REMOVE:Debug.Log("destroying");
+            enemyManager.CheckEndWave(false);
             //drops a random amount of spores 0-5 set from line 18
             if(dropAmount != 0){
                 onDeathDrop.GetComponent<ItemPickup>().amount = dropAmount;
@@ -99,7 +122,7 @@ public class Enemy : MonoBehaviour
             _enemyAttack.KillEnemy();
             gameObject.SetActive(false);
             enemyManager.DestroyInactive();
-            Debug.Log("destroyed");//REMOVE:
+            //REMOVE:Debug.Log("destroyed");
         }
 
         //if (melee)
@@ -107,6 +130,17 @@ public class Enemy : MonoBehaviour
         //    Debug.Log("melee true");//REMOVE:
         //    rigidBody.AddForce(-transform.forward * forceMag, ForceMode.Force);
         //}
+    }
+
+    private IEnumerator DmgFlashCoroutine()
+    {
+        _spriteRenderer.color = new Color(1, .3f, .3f);
+        yield return new WaitForSeconds(0.2f);
+        while (_spriteRenderer.color != Color.white)
+        {
+            _spriteRenderer.color += new Color(0, .1f, .1f);
+            yield return new WaitForSeconds(0.05f);
+        }
     }
 
     //respawn itself MUST BE CALLED BEFORE DESTROY

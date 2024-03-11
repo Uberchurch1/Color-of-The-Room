@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8427317013981168725}
   - component: {fileID: 2030671732128914006}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: BabyManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -47,3 +47,4 @@ MonoBehaviour:
   babiesInTrigger: []
   hudManager: {fileID: 0}
   grabAnim: {fileID: 0}
+  doorsInTrigger: []

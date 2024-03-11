@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class EnemyManager : MonoBehaviour
@@ -12,11 +13,17 @@ public class EnemyManager : MonoBehaviour
     private List<EnemySpawn> activeSpawners = new List<EnemySpawn>();
     public HudManager hudMan;
     private PlayerHealth player;
+    private TextMeshProUGUI turnAround;
+    private int roundCount;
+    public Door door;
     
     private void Start() {
         waveTracker = GetComponent<WaveTracker>();
         player = FindObjectOfType<PlayerHealth>();
         StartCoroutine(CheckActiveCoroutine());
+        StartCoroutine(StarGameCoroutine());
+        turnAround = HudManager.Instance.turnAround;
+        roundCount = player.roundCount;
     }
 
     private void Update() 
@@ -25,16 +32,30 @@ public class EnemyManager : MonoBehaviour
     }
 
     //ends wave if there are no enemies alive and no active spawners
-    public void CheckEndWave()
+    public void CheckEndWave(bool isStart)
     {
         Debug.Log("checking end wave");//REMOVE:
         if(enemiesAlive.Count == 0 && activeSpawners.Count == 0){
-            Debug.Log("end wave = true");//REMOVE:
-            
             waveTracker.waveOngoing = false;
-            Debug.Log("ongoing = false");//REMOVE:
-            StartCoroutine(waveTracker.EndWave());
+            Debug.Log("end wave = true #"+waveTracker.GetWaveCount());//REMOVE:
+            if (!isStart && ((waveTracker.GetWaveCount() % 5) == 0))
+            {
+                Debug.Log("ending round #"+roundCount);//REMOVE:
+                roundCount += 1;
+                player.roundCount += 1;
+                StartCoroutine(RoundEndCoroutine());
+            }
+            else
+            {
+                Debug.Log("starting next wave");//REMOVE:
+                StartCoroutine(waveTracker.EndWave());
+            }
         }
+    }
+
+    public int GetRoundCount()
+    {
+        return roundCount;
     }
 
     //add/remove enemies from gun hitbox
@@ -68,7 +89,7 @@ public class EnemyManager : MonoBehaviour
 
     public void MeleeDamge(float damage)
     {
-        hudMan.GrabTrigger();
+        hudMan.GrabTriggerCoroutine();
         foreach (var enemy in enemiesInMelee)
         {
             enemy.TakeDamage(damage, true);
@@ -90,11 +111,13 @@ public class EnemyManager : MonoBehaviour
     //add/remove enemy spawners
     public void AddSpawner(EnemySpawn spawner)
     {
+        Debug.Log("added spawner, count: "+activeSpawners.Count);//REMOVE:
         activeSpawners.Add(spawner);
     }
     
     public void RemoveSpawner(EnemySpawn spawner)
     {
+        Debug.Log("removed spawner, count: "+activeSpawners.Count);//REMOVE:
         activeSpawners.Remove(spawner);
     }
 
@@ -143,4 +166,39 @@ public class EnemyManager : MonoBehaviour
         }
     }
 
+    private IEnumerator StarGameCoroutine()
+    {
+        HudManager.Instance.turnAround.alpha = 0f;
+        yield return new WaitForSeconds(1f);
+        while (HudManager.Instance.turnAround.alpha < 1)
+        {
+            HudManager.Instance.turnAround.alpha += 0.2f;
+            yield return new WaitForSeconds(0.4f);
+        }
+        yield return new WaitForSeconds(0.5f);
+        HudManager.Instance.turnAround.alpha = 0f;
+        CheckEndWave(true);
+    }
+
+    private IEnumerator RoundEndCoroutine()
+    {
+        door.unlocked = true;
+        waveTracker.ResetWaveCount();
+        Debug.Log("round ending, next round: "+roundCount);//REMOVE:
+        turnAround.text = "YOU";
+        turnAround.alpha = 1f;
+        yield return new WaitForSeconds(1f);
+        turnAround.text = "MAY";
+        yield return new WaitForSeconds(1f);
+        turnAround.text = "LEAVE";
+        yield return new WaitForSeconds(1f);
+        turnAround.text = "NOW!";
+        yield return new WaitForSeconds(1f);
+        while (turnAround.alpha > 0)
+        {
+            turnAround.alpha -= 0.2f;
+            yield return new WaitForSeconds(0.2f);
+        }
+        turnAround.text = "TURN AROUND";
+    }
 }

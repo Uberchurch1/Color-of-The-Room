@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9049369582338010596}
   - component: {fileID: 8694744313766499703}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: EnemySpawner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -48,5 +48,5 @@ MonoBehaviour:
   - {fileID: 1225870241584656509, guid: 4492070fedd309147ab7fcceda8dc35d, type: 3}
   - {fileID: 9131455037507889207, guid: 794d401d18652bb479a56b387bc3e9d8, type: 3}
   enemyBlank: {fileID: 5745345702255984452, guid: 20696ce38ab1c9141851978121097bd6, type: 3}
-  spawnRange: 0
-  spawnRate: 1
+  spawnRange: 3
+  spawnRate: 2

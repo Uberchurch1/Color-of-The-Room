@@ -1,17 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerMelee : MonoBehaviour
 {
     public float range = 1.5f;
     public float damage = 10f;
     public float hitRate = 1f;
-
-    public EnemyManager enemyManager;
     public AudioManager audioMan;
+    
     private BoxCollider meleeTrigger;
-
+    private EnemyManager enemyManager;
+    private SceneSwitcher _sceneSwitcher;
     private float timeToHit;
         
     // Start is called before the first frame update
@@ -31,14 +32,31 @@ public class PlayerMelee : MonoBehaviour
             Attack();
         }
     }
+    
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoad;
+    }
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoad;
+    }
+
+    private void OnSceneLoad(Scene scene, LoadSceneMode mode)
+    {
+        _sceneSwitcher = FindObjectOfType<SceneSwitcher>();
+        if (_sceneSwitcher.CheckCurrentScene("TheRoom"))
+        {
+            enemyManager = FindObjectOfType<EnemyManager>();
+        }
+    }
 
     private void Attack()
     {
         if (enemyManager.EnemyMeleeCount() != 0)
         { 
             //play eat audio
-            GetComponent<AudioSource>().Stop();
-            GetComponent<AudioSource>().Play();
+            audioMan.MeleeHit();
             enemyManager.MeleeDamge(damage); 
         }
         else
@@ -63,7 +81,7 @@ public class PlayerMelee : MonoBehaviour
         Enemy enemy = other.transform.GetComponent<Enemy>();
         if(enemy)
         {
-            Debug.Log("enemy exit: "+enemy);//REMOVE:
+            //REMOVE:Debug.Log("enemy exit: "+enemy);
             enemyManager.RemoveMeleeEnemy(enemy);
         }
     }

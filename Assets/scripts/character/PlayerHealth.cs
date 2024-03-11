@@ -7,11 +7,13 @@ using UnityEngine.SceneManagement;
 public class PlayerHealth : MonoBehaviour
 {
     public float maxHealth = 100;
-    public int spores = 0;
+    public int spores;
     public AudioManager audioMan;
-    
     private float health;
     private PlayerMove playerMove;
+    private SceneSwitcher _sceneSwitcher;
+    public int roundCount = 0;
+    public bool seeking = false;
 
     // Start is called before the first frame update
     void Start()
@@ -20,13 +22,16 @@ public class PlayerHealth : MonoBehaviour
         health = maxHealth;
         HudManager.Instance.UpdHealth((int)health);
         HudManager.Instance.UpdSpores(spores);
+        _sceneSwitcher = FindObjectOfType<SceneSwitcher>();
+        spores = 0;
+        audioMan.PlaySong(2);
     }
 
     // Update is called once per frame
     void Update()
     {
         if(Input.GetKeyDown(KeyCode.O)){
-        RemSpores(10);}//test giving sporesd to the player REMOVE:
+        RemSpores(10);}//test giving spores to the player REMOVE:
         if(Input.GetKeyDown(KeyCode.P)){
         GiveSpores(10);}//test removing spores from the player REMOVE:
         if(Input.GetKeyDown(KeyCode.U)){
@@ -37,20 +42,48 @@ public class PlayerHealth : MonoBehaviour
         //convert spores into health
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
-            Debug.Log("shift key down");//REMOVE:
+            //REMOVE:Debug.Log("shift key down");
             StartCoroutine(HealCoroutine());
         }
+        //see through rooms on right click
+        if (Input.GetMouseButton(1))
+        {
+            seeking = true;
+        }
+        else
+        {
+            seeking = false;
+        }
+    }
+    
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoad;
+    }
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoad;
+    }
+
+    private void OnSceneLoad(Scene scene, LoadSceneMode mode)
+    {
+        Debug.Log("loading new scene: "+scene.name);
+        HudManager.Instance.UpdHealth((int)health);
+        HudManager.Instance.UpdSpores(spores);
     }
 
     //damages the player by int value damage
     public void DamagePlayer(float damage)
     {
         health -= damage;
+        HudManager.Instance.StopAllCoroutines();
+        HudManager.Instance.StartCoroutine(HudManager.Instance.AtkIndCoroutine());
         //checks if player has died and if true resets current scene
         if(health <= 0){
             Debug.Log("player died");
             Scene currentScene = SceneManager.GetActiveScene();
-            SceneManager.LoadScene(currentScene.buildIndex);//change this to death scene TODO:
+            _sceneSwitcher.SwitchScene("Death");
+            Destroy(gameObject);
         }
         HudManager.Instance.UpdHealth((int)health);
     }

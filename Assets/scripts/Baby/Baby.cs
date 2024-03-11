@@ -8,7 +8,7 @@ public class Baby : MonoBehaviour
     public bool respawnable;
     public string babyTypeS;
     private int babyTypeI;
-    
+    private AudioSource walkSource;
     private RoomManager roomMan;
     private BabyManager babyManager;
 
@@ -20,7 +20,7 @@ public class Baby : MonoBehaviour
     {
         babyManager = FindObjectOfType<BabyManager>();
         roomMan = FindObjectOfType<RoomManager>();
-        
+        walkSource = GetComponent<AudioSource>();
         babyTypeI = Array.IndexOf(roomMan.GetRoomList(), babyTypeS);
         babyCollider = GetComponent<CapsuleCollider>();
     }
@@ -31,23 +31,25 @@ public class Baby : MonoBehaviour
         if (IsInRoom())
         {
             babyCollider.enabled = true;
+            walkSource.enabled = true;
         }
         else
         {
             babyCollider.enabled = false;
+            walkSource.enabled = false;
         }
     }
 
     public void Eat()
     {
-        Debug.Log("eaten type: "+babyTypeI);//REMOVE:
+        //REMOVE:Debug.Log("eaten type: "+babyTypeI);
         roomMan.SetRoomTypeI(babyTypeI);
         babyManager.RemoveBaby(this);
         if (!respawnable)
         {
             Destroy(gameObject);
         }
-        Debug.Log("destroyed type: "+babyTypeI);//REMOVE:
+        //REMOVE:Debug.Log("destroyed type: "+babyTypeI);
     }
     
     public int GetTypeI()

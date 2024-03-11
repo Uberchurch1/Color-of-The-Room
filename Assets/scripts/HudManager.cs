@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class HudManager : MonoBehaviour
 {
@@ -16,10 +17,15 @@ public class HudManager : MonoBehaviour
     public Sprite[] sporeSheet;
     public GameObject grabIndicator;
     public Animator grabAnim;
-
+    public TextMeshProUGUI attacked;
+    public TextMeshProUGUI countdown;
+    public TextMeshProUGUI turnAround;
+    
     private BabyManager babyMan;
     private EnemyManager enemyMan;
-
+    private int roomSceneI;
+    private int shopSceneI;
+    public SceneSwitcher _sceneSwitcher;
     private static HudManager _instance;
     public static HudManager Instance {
         get {return _instance;}
@@ -33,8 +39,21 @@ public class HudManager : MonoBehaviour
         {
             _instance = this;
         }
+
+        //_sceneSwitcher = FindObjectOfType<SceneSwitcher>();
+        roomSceneI = SceneManager.GetSceneByName("TheRoom").buildIndex;
+        shopSceneI = SceneManager.GetSceneByName("Shop").buildIndex;
+        Debug.Log("current scene: "+SceneManager.GetActiveScene().name+" #"+SceneManager.GetActiveScene().buildIndex);//REMOVE:
+        Debug.Log("roomSceneI: "+roomSceneI);//REMOVE:
+        Debug.Log("shopSceneI: "+shopSceneI);//REMOVE:
+        if (_sceneSwitcher.CheckCurrentScene("TheRoom"))
+        {
+            enemyMan = FindObjectOfType<EnemyManager>().GetComponent<EnemyManager>();
+        }
         babyMan = FindObjectOfType<BabyManager>().GetComponent<BabyManager>();
-        enemyMan = FindObjectOfType<EnemyManager>().GetComponent<EnemyManager>();
+        attacked.alpha = 0f;
+        turnAround.alpha = 0f;
+        countdown.text = "";
     }
     
     
@@ -61,14 +80,45 @@ public class HudManager : MonoBehaviour
 
     public void HideGrab()
     {
-        if ((enemyMan.EnemyMeleeCount() == 0) && (babyMan.BabyCount() == 0))
+        if (_sceneSwitcher.CheckCurrentScene("TheRoom"))
+        {
+            if ((enemyMan.EnemyMeleeCount() == 0) && (babyMan.BabyCount() == 0))
+            {
+                grabAnim.SetBool("HoverActive", false);
+            }
+        }
+        else
         {
             grabAnim.SetBool("HoverActive", false);
         }
     }
 
-    public void GrabTrigger()
+    public IEnumerator GrabTriggerCoroutine()
     {
         grabAnim.SetTrigger("GrabActive");
+        yield return new WaitForSeconds(.26f);
+        grabAnim.SetBool("HoverActive", false);
+    }
+
+    public IEnumerator AtkIndCoroutine()
+    {
+        attacked.alpha = 1.5f;
+        while (attacked.alpha > 0)
+        {
+            attacked.alpha -= .25f;
+            yield return new WaitForSeconds(.25f);
+        }
+    }
+
+    public IEnumerator CountdownCoroutine()
+    {
+        GetComponent<AudioSource>().Play();
+        for (int i = 5; i > 0; i--)
+        {
+            countdown.text = i.ToString();
+            yield return new WaitForSeconds(1f);
+        }
+
+        countdown.text = "";
     }
 }

@@ -31,7 +31,7 @@ public class EnemyAttack : MonoBehaviour
         Debug.Log("returned to coroutine"); //REMOVE:
         while (inAtkRange)
         {  
-            Debug.Log("damaging player"); //REMOVE:
+            Debug.Log("damaging player");//REMOVE:
             player.DamagePlayer(enemyDmg);
             yield return new WaitForSeconds(atkSpeed);
         }
@@ -62,7 +62,7 @@ public class EnemyAttack : MonoBehaviour
 
     public void KillEnemy()
     {
-        Debug.Log("killing enemy");//REMOVE:
+        //REMOVE:Debug.Log("killing enemy");
         StopAllCoroutines();
     }
 }

@@ -56,7 +56,8 @@ PrefabInstance:
       propertyPath: babyTypeS
       value: blue
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6161770345159391115, guid: 1168f871146573341ac88d4f33bb1c06, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

@@ -14,12 +14,14 @@ public class BabyAI : MonoBehaviour
     private BabyAwarness babyAware;
     private bool running;
     private Transform playerTransform;
+    private AudioSource walkSource;
     public float safeRange = 5f;
 
     private NavMeshAgent babyNavMesh;
     // Start is called before the first frame update
     void Start()
     {
+        walkSource = GetComponent<AudioSource>();
         babyAware = GetComponent<BabyAwarness>();
         playerTransform = FindObjectOfType<PlayerMove>().transform;
         babyNavMesh = GetComponent<NavMeshAgent>();
@@ -30,16 +32,27 @@ public class BabyAI : MonoBehaviour
     {
         if (babyAware.isAggro && !running)
         {
-            babyNavMesh.SetDestination(safeSpots[FindSafeSpot(transform.position)]);
             running = true;
+            babyNavMesh.SetDestination(safeSpots[FindSafeSpot(transform.position)]);
         }
 
         if (running)
         {
+            if (!walkSource.isPlaying && walkSource.enabled)
+            {
+                walkSource.Play();
+            }
             if (CheckSafeSpot(transform.position) != -1)
             {
-                running = false;
+                if (!babyAware.isAggro)
+                {
+                    running = false;
+                }
             }
+        }
+        else if (walkSource.isPlaying)
+        {
+            walkSource.Stop();
         }
     }
 
@@ -47,10 +60,13 @@ public class BabyAI : MonoBehaviour
     {
         foreach (var spot in safeSpots)
         {
-            var dist = Vector3.Distance(spot, currentPos);
-            if (dist <= safeRange)
+            if (spot != babyNavMesh.destination)
             {
-                return Array.IndexOf(safeSpots, spot);
+                var dist = Vector3.Distance(spot, currentPos);
+                if (dist <= safeRange)
+                {
+                    return Array.IndexOf(safeSpots, spot);
+                }
             }
         }
         return -1;

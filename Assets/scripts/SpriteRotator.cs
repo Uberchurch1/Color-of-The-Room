@@ -15,6 +15,7 @@ public class SpriteRotator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.LookAt(target);
+        Vector3 dir = new Vector3(target.position.x, transform.position.y, target.position.z);
+        transform.LookAt(dir);
     }
 }

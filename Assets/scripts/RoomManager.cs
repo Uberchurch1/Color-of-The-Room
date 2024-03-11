@@ -58,15 +58,15 @@ public class RoomManager : MonoBehaviour
 
     public void SetRoomTypeI(int roomType)
     {
-        Debug.Log("setting type: "+roomType);//REMOVE:
+        //REMOVE:Debug.Log("setting type: "+roomType);
         try
         {
-            Debug.Log("in try");//REMOVE:
+            //REMOVE:Debug.Log("in try");
             if (roomTypes.Length > roomType)
             {
                 currentRoom = roomTypes[roomType];
                 currentRoomI = roomType;
-                Debug.Log("set type: "+currentRoom+"("+currentRoomI+")");//REMOVE:
+                //REMOVE:Debug.Log("set type: "+currentRoom+"("+currentRoomI+")");
                 environMan.ChangeWall(roomType);
             }
             else

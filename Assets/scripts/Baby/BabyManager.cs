@@ -7,6 +7,7 @@ public class BabyManager : MonoBehaviour
     public List<Baby> babiesInTrigger = new List<Baby>();
     public GameObject hudManager;
     public Animator grabAnim;
+    public List<Door> doorsInTrigger = new List<Door>();
 
     // Start is called before the first frame update
     void Start()
@@ -32,7 +33,7 @@ public class BabyManager : MonoBehaviour
     public void RemoveBaby(Baby baby)
     {
         babiesInTrigger.Remove(baby);
-        if(babiesInTrigger.Count == 0){
+        if(babiesInTrigger.Count == 0 && doorsInTrigger.Count == 0){
             hudManager.GetComponent<HudManager>().HideGrab();
         }
     }
@@ -40,5 +41,21 @@ public class BabyManager : MonoBehaviour
     public int BabyCount()
     {
         return babiesInTrigger.Count;
+    }
+    
+    public void AddDoor(Door door)
+    {
+        doorsInTrigger.Add(door);
+        if(doorsInTrigger.Count != 0){
+            hudManager.GetComponent<HudManager>().ShowGrab();
+        }
+    }
+    
+    public void RemoveDoor(Door door)
+    {
+        doorsInTrigger.Remove(door);
+        if(babiesInTrigger.Count == 0 && doorsInTrigger.Count == 0){
+            hudManager.GetComponent<HudManager>().HideGrab();
+        }
     }
 }

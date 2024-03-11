@@ -8,7 +8,7 @@ public class EnemySpawn : MonoBehaviour
     public GameObject[] enemyTypes;
     public GameObject enemyBlank;
     public float spawnRange;
-    public float spawnRate = 1f;
+    public float spawnRate = 2f;
 
     private WaveTracker waveTracker;
     private EnemyManager enemyManager;
@@ -45,26 +45,40 @@ public class EnemySpawn : MonoBehaviour
     public void StartWave(int waveCount)
     {
         waveTracker.SetOngoing();
-        //REMOVE:Debug.Log("starting spawn wave #"+waveCount);
+        Debug.Log("starting spawn wave #"+waveCount);//REMOVE:
         enemyManager.AddSpawner(this);//makes spawner active in enemyManager
         //spawns an enemy every spawnRate a waveCount amount of times
         StartCoroutine(waveCoroutine(waveCount));
-        enemyManager.RemoveSpawner(this);//makes spawner unactive in enemyManager
     }
 
     private IEnumerator waveCoroutine(int waveCount)
     {
-        int enemiesSpawned = 0;
-        while(enemiesSpawned < waveCount){
-            Debug.Log("spawning enemy #"+enemiesSpawned);//REMOVE:
-            //REMOVE:Debug.Log("enemyType length = "+enemyTypes.Length);
-            int ranType = Random.Range(0, enemyTypes.Length);
-            Debug.Log("ranType = "+ranType);//REMOVE:
-            SpawnEnemy(ranType);//change to random range between 0 and # of enemy types FIXME:
-            enemiesSpawned++;
-            
-            yield return new WaitForSeconds(spawnRate);
+        int total = 0;
+        Debug.Log("starting coroutine W: "+waveCount+", R: "+enemyManager.GetRoundCount());//REMOVE:
+        for (int i = 0; i <= enemyManager.GetRoundCount(); i++)
+        {
+            Debug.Log("enemy spawning round: "+i);//REMOVE:
+            int enemiesSpawned = 0;
+            while (enemiesSpawned < waveCount)
+            {
+                Debug.Log("spawning enemy #" + enemiesSpawned); //REMOVE:
+                //REMOVE:Debug.Log("enemyType length = "+enemyTypes.Length);
+                int ranType = Random.Range(0, enemyTypes.Length);
+                //REMOVE:Debug.Log("ranType = " + ranType); 
+                SpawnEnemy(ranType); //change to random range between 0 and # of enemy types FIXME:
+                enemiesSpawned++;
+
+                yield return new WaitForSeconds(spawnRate);
+            }
+
+            total += enemiesSpawned;
+            if (i != enemyManager.GetRoundCount())
+            {
+                Debug.Log("waiting for next spawn round: "+ (i+1));//REMOVE:
+                yield return new WaitForSeconds(spawnRate*5);
+            }
         }
-        
+        Debug.Log(("ending spawning, total spawned: "+total));//REMOVE:
+        enemyManager.RemoveSpawner(this);//makes spawner unactive in enemyManager
     }
 }

@@ -12,7 +12,7 @@ public class PlayerMove : MonoBehaviour
     public float momentumDamping = 10f;
 
     private CharacterController pCC;
-
+    private AudioSource walkSource;
     private bool isWalking;
     private Vector3 planeNorm;
     private Vector3 inputVector;
@@ -27,7 +27,8 @@ public class PlayerMove : MonoBehaviour
     {
         pCC = GetComponent<CharacterController>();
         planeNorm = new Vector3(0,1,0);
-
+        walkSource = GetComponent<AudioSource>();
+        pCC.enableOverlapRecovery = true;
     }
 
     // Update is called once per frame
@@ -35,8 +36,15 @@ public class PlayerMove : MonoBehaviour
     {
         GetInput();
         MovePlayer();
-
         camAnim.SetBool("isWalking", isWalking);
+        if (isWalking && !walkSource.isPlaying)
+        {
+            walkSource.Play();
+        }
+        else if(!isWalking && walkSource.isPlaying)
+        {
+            walkSource.Stop();
+        }
     }
 
     void GetInput()
@@ -50,7 +58,10 @@ public class PlayerMove : MonoBehaviour
 
             isWalking = true;//enables head bob
         }
-
+        //else if (Input.GetKeyDown(KeyCode.Tab))
+        //{
+        //    gameObject.transform.SetPositionAndRotation(new Vector3(0,1.33f,-2.16f),Quaternion.identity);
+        //}
         //if not holding wasd slows down char
         else
         {
