@@ -14,6 +14,8 @@ public class PlayerHealth : MonoBehaviour
     private SceneSwitcher _sceneSwitcher;
     public int roundCount = 0;
     public bool seeking = false;
+    public bool isPaused = false;
+    public bool isHealing = false;
 
     // Start is called before the first frame update
     void Start()
@@ -31,28 +33,47 @@ public class PlayerHealth : MonoBehaviour
     void Update()
     {
         if(Input.GetKeyDown(KeyCode.O)){
-        RemSpores(10);}//test giving spores to the player REMOVE:
+            RemSpores(50);}//test giving spores to the player //REMOVE:
         if(Input.GetKeyDown(KeyCode.P)){
-        GiveSpores(10);}//test removing spores from the player REMOVE:
+            GiveSpores(50);}//test removing spores from the player //REMOVE:
         if(Input.GetKeyDown(KeyCode.U)){
-        DamagePlayer(10);}//test damaging the player REMOVE:
+            DamagePlayer(10);}//test damaging the player //REMOVE:
         if(Input.GetKeyDown(KeyCode.I)){
-        GiveHealth(10);}//test giving health to the player REMOVE:
-        
-        //convert spores into health
-        if (Input.GetKeyDown(KeyCode.LeftShift))
+            GiveHealth(10);}//test giving health to the player //REMOVE:
+        if (Input.GetKeyDown(KeyCode.J)) {
+            _sceneSwitcher.SwitchScene("Start"); }//REMOVE:
+        if (Input.GetKeyDown(KeyCode.K)) {
+            _sceneSwitcher.SwitchScene("TheRoom"); }//REMOVE:
+        if (Input.GetKeyDown(KeyCode.L)) {
+            _sceneSwitcher.SwitchScene("Shop"); }//REMOVE:
+
+        if (!isPaused)
         {
-            //REMOVE:Debug.Log("shift key down");
-            StartCoroutine(HealCoroutine());
+            if (!seeking)
+            {
+                //convert spores into health
+                if (Input.GetKeyDown(KeyCode.LeftShift))
+                {
+                    //REMOVE:Debug.Log("shift key down");
+                    StartCoroutine(HealCoroutine());
+                }
+
+                if (!isHealing)
+                {
+                    audioMan.StopInhale();
+                }
+            }
+
+            //see through rooms on right click
+            if (Input.GetMouseButtonDown(1))
+            {
+                StartCoroutine(SeekCoroutine());
+            }
         }
-        //see through rooms on right click
-        if (Input.GetMouseButton(1))
+
+        if (Input.GetKeyDown(KeyCode.Tab))
         {
-            seeking = true;
-        }
-        else
-        {
-            seeking = false;
+            isPaused = HudManager.Instance.ToggleExitMenu();
         }
     }
     
@@ -142,6 +163,7 @@ public class PlayerHealth : MonoBehaviour
                 //REMOVE:Debug.Log("healing");
                 playerMove.playerSpeed = 5f;
                 GiveHealth(2);
+                isHealing = true;
                 yield return new WaitForSeconds(0.1f);
             }
             yield return new WaitForSeconds(0.1f);
@@ -152,5 +174,37 @@ public class PlayerHealth : MonoBehaviour
             audioMan.StartCoroutine(audioMan.StopHeal());
         }
         playerMove.playerSpeed = 17f;
+        audioMan.StopInhale();
+        isHealing = false;
+    }
+    
+    private IEnumerator SeekCoroutine()
+    {
+        Debug.Log("seek start");//REMOVE:
+        while (Input.GetMouseButton(1) && spores != 0)
+        {
+            if (RemSpores(1))
+            {
+                Time.timeScale = 0.5f;
+                //REMOVE:Debug.Log("health low");
+                if (!audioMan.CheckHealing())
+                {
+                    //REMOVE:Debug.Log("not healing");
+                    audioMan.StartCoroutine(audioMan.StartHeal());
+                }
+                playerMove.playerSpeed = 7f;
+                seeking = true;
+                yield return new WaitForSeconds(0.05f);
+            }
+            yield return new WaitForSeconds(0.05f);
+        }
+        Time.timeScale = 1f;
+        if (audioMan.CheckHealing())
+        {
+            audioMan.StartCoroutine(audioMan.StopHeal());
+        }
+        seeking = false;
+        playerMove.playerSpeed = 17f;
+        audioMan.StopInhale();
     }
 }

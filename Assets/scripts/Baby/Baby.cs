@@ -11,7 +11,7 @@ public class Baby : MonoBehaviour
     private AudioSource walkSource;
     private RoomManager roomMan;
     private BabyManager babyManager;
-
+    private PlayerHealth player;
     private Collider babyCollider;
     //private Animator spriteAnim; FIXME:
 
@@ -23,6 +23,7 @@ public class Baby : MonoBehaviour
         walkSource = GetComponent<AudioSource>();
         babyTypeI = Array.IndexOf(roomMan.GetRoomList(), babyTypeS);
         babyCollider = GetComponent<CapsuleCollider>();
+        player = FindObjectOfType<PlayerHealth>();
     }
 
     // Update is called once per frame
@@ -37,6 +38,14 @@ public class Baby : MonoBehaviour
         {
             babyCollider.enabled = false;
             walkSource.enabled = false;
+        }
+        if (player.seeking)
+        {
+            walkSource.pitch = Time.timeScale;
+        }
+        else
+        {
+            walkSource.pitch = 1;
         }
     }
 

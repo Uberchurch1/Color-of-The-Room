@@ -22,7 +22,6 @@ public class Door : MonoBehaviour
     {
         roomSceneI = SceneManager.GetSceneByName("TheRoom").buildIndex;
         shopSceneI = SceneManager.GetSceneByName("Shop").buildIndex;
-        audioSource = GetComponent<AudioSource>();
         audioMan = FindObjectOfType<AudioManager>();
         //_sceneSwitcher = FindObjectOfType<SceneSwitcher>();
     }

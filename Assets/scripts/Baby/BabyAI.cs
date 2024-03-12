@@ -12,7 +12,7 @@ public class BabyAI : MonoBehaviour
 {
     public Vector3[] safeSpots;
     private BabyAwarness babyAware;
-    private bool running;
+    public bool running;
     private Transform playerTransform;
     private AudioSource walkSource;
     public float safeRange = 5f;
@@ -30,6 +30,7 @@ public class BabyAI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
         if (babyAware.isAggro && !running)
         {
             running = true;

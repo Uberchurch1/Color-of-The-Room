@@ -19,7 +19,7 @@ public class PlayerMove : MonoBehaviour
     private Vector3 flatVector;
     private Vector3 movementVector;
     private float gravity = -10f;
-
+    private PlayerHealth _playerHealth;
 
 
     // Start is called before the first frame update
@@ -29,21 +29,33 @@ public class PlayerMove : MonoBehaviour
         planeNorm = new Vector3(0,1,0);
         walkSource = GetComponent<AudioSource>();
         pCC.enableOverlapRecovery = true;
+        _playerHealth = GetComponent<PlayerHealth>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        GetInput();
-        MovePlayer();
-        camAnim.SetBool("isWalking", isWalking);
-        if (isWalking && !walkSource.isPlaying)
+        if (!_playerHealth.isPaused)
         {
-            walkSource.Play();
+            GetInput();
+            MovePlayer();
+            camAnim.SetBool("isWalking", isWalking);
+            if (isWalking && !walkSource.isPlaying)
+            {
+                walkSource.Play();
+            }
+            else if (!isWalking && walkSource.isPlaying)
+            {
+                walkSource.Stop();
+            }
         }
-        else if(!isWalking && walkSource.isPlaying)
+        if (_playerHealth.seeking)
         {
-            walkSource.Stop();
+            walkSource.pitch = Time.timeScale;
+        }
+        else
+        {
+            walkSource.pitch = 1;
         }
     }
 

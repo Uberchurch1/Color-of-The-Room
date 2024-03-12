@@ -26,10 +26,12 @@ public class Gun : MonoBehaviour
     private BoxCollider gunTrigger;
     private int enemyLayer;
     private SceneSwitcher _sceneSwitcher;
+    private PlayerHealth _playerHealth;
 
     // Start is called before the first frame update
     void Start()
     {
+        _playerHealth = GetComponentInParent<PlayerHealth>();
         enemyLayer = LayerMask.NameToLayer("Enemy");
         ammo = maxAmmo;
         //creates a trigger hit box(big box that will damage all enemies inside)
@@ -59,16 +61,22 @@ public class Gun : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //check if can shoot(fire delay)
-        if(Input.GetMouseButtonDown(0) && Time.time > timeToFire)
+        if (!_playerHealth.isPaused && !_playerHealth.seeking)
         {
-            //REMOVE:Debug.Log("mouse down & timetofire");
-            CheckAmmo();
-        }
-        if(Input.GetKeyDown(KeyCode.R)){
-            if(reloadB){
-                //REMOVE:Debug.Log("trying reload");
-                Reload();
+            //check if can shoot(fire delay)
+            if (Input.GetMouseButtonDown(0) && Time.time > timeToFire)
+            {
+                //REMOVE:Debug.Log("mouse down & timetofire");
+                CheckAmmo();
+            }
+
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                if (reloadB)
+                {
+                    //REMOVE:Debug.Log("trying reload");
+                    Reload();
+                }
             }
         }
     }

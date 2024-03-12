@@ -12,6 +12,7 @@ public class Grab : MonoBehaviour
     private HudManager hudMan;
     private BabyManager babyManager;
     private SceneSwitcher _sceneSwitcher;
+    private PlayerHealth _playerHealth;
 
     // Start is called before the first frame update
     void Start()
@@ -19,15 +20,23 @@ public class Grab : MonoBehaviour
         grabTrigger = GetComponent<BoxCollider>();
         grabTrigger.size = new Vector3(1.5f, 1.5f, range);
         grabTrigger.center = new Vector3(0,0, range*0.5f);
+        _playerHealth = GetComponentInParent<PlayerHealth>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.E)){
-            if (!TryEat())
+        if (!_playerHealth.isPaused)
+        {
+            if (Input.GetKeyDown(KeyCode.E))
             {
-                TryOpen();
+                if (!TryEat())
+                {
+                    if (!TryOpenShop())
+                    {
+                        TryOpenDoor();
+                    }
+                }
             }
         }
     }
@@ -43,7 +52,7 @@ public class Grab : MonoBehaviour
     private void OnSceneLoad(Scene scene, LoadSceneMode mode)
     {
         _sceneSwitcher = FindObjectOfType<SceneSwitcher>();
-        hudMan = FindObjectOfType<HudManager>();
+        hudMan = HudManager.Instance;
         babyManager = FindObjectOfType<BabyManager>();
     }
 
@@ -70,7 +79,7 @@ public class Grab : MonoBehaviour
         return false;
     }
 
-    private bool TryOpen()
+    private bool TryOpenDoor()
     {
         foreach (var door in babyManager.doorsInTrigger)
         {
@@ -78,6 +87,17 @@ public class Grab : MonoBehaviour
             return door.Open();
         }
         Debug.Log("did not try open");//REMOVE:
+        return false;
+    }
+
+    private bool TryOpenShop()
+    {
+        foreach (var shop in babyManager.shopsInTrigger)
+        {
+            hudMan.GrabTriggerCoroutine();
+            return shop.OpenShop();
+        }
+
         return false;
     }
 
@@ -95,6 +115,11 @@ public class Grab : MonoBehaviour
             babyManager.AddDoor(door);
             Debug.Log("added door");//REMOVE:
         }
+        Shop shop = other.transform.GetComponent<Shop>();
+        if(shop){
+            babyManager.AddShop(shop);
+            Debug.Log("added shop");//REMOVE:
+        }
     }
 
     private void OnTriggerExit(Collider other)
@@ -107,6 +132,11 @@ public class Grab : MonoBehaviour
         Door door = other.transform.GetComponent<Door>();
         if(door){
             babyManager.RemoveDoor(door);
+        }
+        Shop shop = other.transform.GetComponent<Shop>();
+        if(shop){
+            babyManager.RemoveShop(shop);
+            Debug.Log("added shop");//REMOVE:
         }
     }
 }

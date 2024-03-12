@@ -26,9 +26,12 @@ public class MouseLook : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        GetInput();
-        ModifyInput();
-        PlayerLook();
+        if (Cursor.lockState == CursorLockMode.Locked)
+        {
+            GetInput();
+            ModifyInput();
+            PlayerLook();
+        }
     }
 
     void GetInput()

@@ -67,6 +67,7 @@ public class Enemy : MonoBehaviour
     {
         if (IsInRoom())
         {
+            
             _spriteRenderer.color =
                 new Color(_spriteRenderer.color.r, _spriteRenderer.color.g, _spriteRenderer.color.b, 1f);
             _spriteRenderer.enabled = true;
@@ -86,6 +87,15 @@ public class Enemy : MonoBehaviour
             }
             enemyCollider.enabled = false;
             walkSource.enabled = false;
+        }
+
+        if (player.seeking)
+        {
+            walkSource.pitch = Time.timeScale;
+        }
+        else
+        {
+            walkSource.pitch = 1;
         }
     }
 

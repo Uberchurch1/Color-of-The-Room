@@ -418,6 +418,58 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 297231969264505453, guid: 5ed1008ada8e8364fb86da040a12f135, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3643690897817984593, guid: 5ed1008ada8e8364fb86da040a12f135, type: 3}
+      propertyPath: m_Colors.m_PressedColor.b
+      value: 0.34764683
+      objectReference: {fileID: 0}
+    - target: {fileID: 3643690897817984593, guid: 5ed1008ada8e8364fb86da040a12f135, type: 3}
+      propertyPath: m_Colors.m_PressedColor.g
+      value: 0.34764683
+      objectReference: {fileID: 0}
+    - target: {fileID: 3643690897817984593, guid: 5ed1008ada8e8364fb86da040a12f135, type: 3}
+      propertyPath: m_Colors.m_PressedColor.r
+      value: 0.5924529
+      objectReference: {fileID: 0}
+    - target: {fileID: 3643690897817984593, guid: 5ed1008ada8e8364fb86da040a12f135, type: 3}
+      propertyPath: m_Colors.m_HighlightedColor.b
+      value: 0.6150943
+      objectReference: {fileID: 0}
+    - target: {fileID: 3643690897817984593, guid: 5ed1008ada8e8364fb86da040a12f135, type: 3}
+      propertyPath: m_Colors.m_HighlightedColor.g
+      value: 0.6150943
+      objectReference: {fileID: 0}
+    - target: {fileID: 3643690897817984593, guid: 5ed1008ada8e8364fb86da040a12f135, type: 3}
+      propertyPath: m_Colors.m_HighlightedColor.r
+      value: 0.6150943
+      objectReference: {fileID: 0}
+    - target: {fileID: 4017799453890622750, guid: 5ed1008ada8e8364fb86da040a12f135, type: 3}
+      propertyPath: m_text
+      value: EXIT
+      objectReference: {fileID: 0}
+    - target: {fileID: 4017799453890622750, guid: 5ed1008ada8e8364fb86da040a12f135, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 3e1db99313f56904abf25442122c27d6, type: 2}
+    - target: {fileID: 4017799453890622750, guid: 5ed1008ada8e8364fb86da040a12f135, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 973734778674421602, guid: 3e1db99313f56904abf25442122c27d6, type: 2}
+    - target: {fileID: 4017799453890622750, guid: 5ed1008ada8e8364fb86da040a12f135, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4074598564832727167, guid: 5ed1008ada8e8364fb86da040a12f135, type: 3}
+      propertyPath: m_UseSpriteMesh
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5689303067193526158, guid: 5ed1008ada8e8364fb86da040a12f135, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6363375862660948671, guid: 5ed1008ada8e8364fb86da040a12f135, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -498,6 +550,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6766998363853389797, guid: 5ed1008ada8e8364fb86da040a12f135, type: 3}
+      propertyPath: price
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 7537257637158315391, guid: 5ed1008ada8e8364fb86da040a12f135, type: 3}
       propertyPath: _sceneSwitcher
       value: 
@@ -528,6 +584,22 @@ PrefabInstance:
       propertyPath: m_audioClip
       value: 
       objectReference: {fileID: 8300000, guid: e6cee72d1dd49d54ea2660d98ab42413, type: 3}
+    - target: {fileID: 3014332114265182796, guid: 1f76fbddc3c37ff49ab3111d21007f3c, type: 3}
+      propertyPath: m_ClearFlags
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3014332114265182796, guid: 1f76fbddc3c37ff49ab3111d21007f3c, type: 3}
+      propertyPath: m_BackGroundColor.b
+      value: 0.6377357
+      objectReference: {fileID: 0}
+    - target: {fileID: 3014332114265182796, guid: 1f76fbddc3c37ff49ab3111d21007f3c, type: 3}
+      propertyPath: m_BackGroundColor.g
+      value: 0.07580629
+      objectReference: {fileID: 0}
+    - target: {fileID: 3014332114265182796, guid: 1f76fbddc3c37ff49ab3111d21007f3c, type: 3}
+      propertyPath: m_BackGroundColor.r
+      value: 0.33416417
+      objectReference: {fileID: 0}
     - target: {fileID: 3632223900464873678, guid: 1f76fbddc3c37ff49ab3111d21007f3c, type: 3}
       propertyPath: m_Name
       value: Player

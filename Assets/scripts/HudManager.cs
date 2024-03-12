@@ -20,7 +20,10 @@ public class HudManager : MonoBehaviour
     public TextMeshProUGUI attacked;
     public TextMeshProUGUI countdown;
     public TextMeshProUGUI turnAround;
+    public GameObject exitMenu;
+    public GameObject shopMenu;
     
+    private PlayerHealth _playerHealth;
     private BabyManager babyMan;
     private EnemyManager enemyMan;
     private int roomSceneI;
@@ -54,6 +57,9 @@ public class HudManager : MonoBehaviour
         attacked.alpha = 0f;
         turnAround.alpha = 0f;
         countdown.text = "";
+        exitMenu.SetActive(false);
+        shopMenu.SetActive(false);
+        _playerHealth = FindObjectOfType<PlayerHealth>();
     }
     
     
@@ -120,5 +126,51 @@ public class HudManager : MonoBehaviour
         }
 
         countdown.text = "";
+    }
+
+    public bool ToggleExitMenu()
+    {
+        if (exitMenu.activeSelf)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+            exitMenu.SetActive(false);
+            Time.timeScale = 1;
+            AudioListener.pause = false;
+            return false;
+        }
+        else
+        {
+            exitMenu.SetActive(true);
+            Cursor.lockState = CursorLockMode.Confined;
+            Cursor.visible = true;
+            Time.timeScale = 0;
+            AudioListener.pause = true;
+            return true;
+        }
+    }
+
+    public bool ToggleShopMenuB()
+    {
+        ToggleShopMenu();
+        return shopMenu.activeSelf;
+    }
+    
+    public void ToggleShopMenu()
+    {
+        if (shopMenu.activeSelf)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+            shopMenu.SetActive(false);
+        }
+        else
+        {
+            shopMenu.SetActive(true);
+            Cursor.lockState = CursorLockMode.Confined;
+            Cursor.visible = true;
+        }
+
+        _playerHealth.isPaused = shopMenu.activeSelf;
     }
 }

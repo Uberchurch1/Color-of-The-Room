@@ -8,6 +8,7 @@ public class BabySpriteAnimator : MonoBehaviour
     private Transform target;
     private Baby parent;
     private Animator spriteAnim;
+    private BabyAI AI;
 
     // Start is called before the first frame update
     void Start()
@@ -15,6 +16,7 @@ public class BabySpriteAnimator : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         target = FindObjectOfType<PlayerMove>().transform;
         parent = GetComponentInParent<Baby>();
+        AI = GetComponentInParent<BabyAI>();
         spriteAnim = GetComponent<Animator>();
     }
 
@@ -26,6 +28,7 @@ public class BabySpriteAnimator : MonoBehaviour
         transform.LookAt(modTarget);
         spriteAnim.SetInteger("BabyType", parent.GetTypeI());
         spriteAnim.SetBool("ShowBaby", parent.IsInRoom());
+        spriteAnim.SetBool("IsRunning",AI.running);
         if (parent.IsInRoom())
         {
             spriteRenderer.enabled = true;

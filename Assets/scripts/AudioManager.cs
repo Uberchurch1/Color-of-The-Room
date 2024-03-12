@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,11 +18,43 @@ public class AudioManager : MonoBehaviour
     public AudioClip[] meleeHits;//deprecated didnt sound good
     public AudioClip meleeChomp;
     public AudioClip[] meleeAirs;
-    
     public AudioClip locked;
     public AudioClip open;
+    
+        [FormerlySerializedAs("songs")]
+    public AudioSource[] songSources;
+    
+    
+    private PlayerHealth _playerHealth;
 
-    [FormerlySerializedAs("songs")] public AudioSource[] songSources;
+    private void Start()
+    {
+        _playerHealth = GetComponentInParent<PlayerHealth>();
+        foreach (var source in songSources)
+        {
+            source.ignoreListenerPause = true;
+        }
+    }
+
+    private void Update()
+    {
+        if (_playerHealth.seeking)
+        {
+            oneShots.pitch = Time.timeScale;
+            foreach (var source in songSources)
+            {
+                source.pitch = Time.timeScale;
+            }
+        }
+        else
+        {
+            oneShots.pitch = Time.timeScale;
+            foreach (var source in songSources)
+            {
+                source.pitch = Time.timeScale;
+            }
+        }
+    }
 
     public IEnumerator StartHeal()
     {
@@ -47,6 +80,11 @@ public class AudioManager : MonoBehaviour
     public void StartInhale()
     {
         inhaleLoop.Play();
+    }
+    
+    public void StopInhale()
+    {
+        inhaleLoop.Stop();
     }
 
     public bool CheckHealing()
