@@ -39,21 +39,6 @@ public class PlayerHealth : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.O)){
-            RemSpores(50);}//test giving spores to the player //REMOVE:
-        if(Input.GetKeyDown(KeyCode.P)){
-            GiveSpores(50);}//test removing spores from the player //REMOVE:
-        if(Input.GetKeyDown(KeyCode.U)){
-            DamagePlayer(10);}//test damaging the player //REMOVE:
-        if(Input.GetKeyDown(KeyCode.I)){
-            GiveHealth(10);}//test giving health to the player //REMOVE:
-        if (Input.GetKeyDown(KeyCode.J)) {
-            _sceneSwitcher.SwitchScene("Start"); }//REMOVE:
-        if (Input.GetKeyDown(KeyCode.K)) {
-            _sceneSwitcher.SwitchScene("TheRoom"); }//REMOVE:
-        if (Input.GetKeyDown(KeyCode.L)) {
-            _sceneSwitcher.SwitchScene("Shop"); }//REMOVE:
-
         if (!isPaused)
         {
             if (!seeking)
@@ -192,7 +177,7 @@ public class PlayerHealth : MonoBehaviour
     
     private IEnumerator SeekCoroutine()
     {
-        Debug.Log("seek start");//REMOVE:
+        //REMOVE:Debug.Log("seek start");
         while (Input.GetMouseButton(1) && spores != 0)
         {
             if (RemSpores(seekCost))

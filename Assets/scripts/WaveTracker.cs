@@ -18,38 +18,20 @@ public class WaveTracker : MonoBehaviour
         waveCount = 0;
         waveOngoing = false;
     }
-
-    private void Awake()
-    {
-        //StartWave();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if(Input.GetKeyDown(KeyCode.LeftBracket)){
-            Debug.Log("end key down");
-            StartCoroutine(EndWave());}//manually end wave//REMOVE:
-        
-        if(Input.GetKeyDown(KeyCode.RightBracket)){
-            Debug.Log("start key down");
-            StartWave();}//manually start wave//REMOVE:
-    }
-
     public void StartWave()
     {
         waveCount++;
-        Debug.Log("starting wave #"+waveCount);//REMOVE:
+        //REMOVE:Debug.Log("starting wave #"+waveCount);
         foreach (var spawner in spawners)
         {
             spawner.StartWave(waveCount);
         }
-        Debug.Log("ongoing = true");//REMOVE:
+        //REMOVE:Debug.Log("ongoing = true");
     }
 
     public IEnumerator EndWave()
     {
-        Debug.Log("ending wave");//REMOVE:
+        //REMOVE:Debug.Log("ending wave");
         if (waveRepeat && !waveOngoing)
         {
             yield return new WaitForSeconds(2f);

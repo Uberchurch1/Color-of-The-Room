@@ -39,20 +39,20 @@ public class ItemTextBubble : MonoBehaviour
     {
         button = GetComponentInChildren<Button>().gameObject;
         Debug.Log("active scene: "+SceneManager.GetActiveScene().name);
-        Debug.Log("item: "+itemNum+" enabled");//REMOVE:
+        //REMOVE:Debug.Log("item: "+itemNum+" enabled");
         shop = FindObjectOfType<Shop>();
         _sceneSwitcher = FindObjectOfType<SceneSwitcher>();
         if (_sceneSwitcher.CheckCurrentScene("Shop"))
         {
-            Debug.Log("checking availability");//REMOVE:
+            //REMOVE:Debug.Log("checking availability");
             if (shop.CheckAvailable(itemNum))
             {
-                Debug.Log("item: "+itemNum+" active");//REMOVE:
+                //REMOVE:Debug.Log("item: "+itemNum+" active");
                 button.SetActive(true);
             }
             else
             {
-                Debug.Log("item: "+itemNum+" not active");//REMOVE:
+                //REMOVE:Debug.Log("item: "+itemNum+" not active");
                 button.SetActive(false);
             }
         }

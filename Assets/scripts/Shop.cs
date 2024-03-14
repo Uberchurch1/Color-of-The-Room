@@ -41,13 +41,13 @@ public class Shop : MonoBehaviour
         
         if (_playerHealth.seekCost >= 2)
         {
-            Debug.Log("restocked item 6");//REMOVE:
+            //REMOVE:Debug.Log("restocked item 6");
             RestockItem(6);
         }
 
         for (int i = 1; i <= 5; i++)
         {
-            Debug.Log("restocked item: "+i);//REMOVE:
+            //REMOVE:Debug.Log("restocked item: "+i);
             RestockItem(i);
         }
     }
@@ -68,7 +68,7 @@ public class Shop : MonoBehaviour
 
     public bool CheckAvailable(int item)
     {
-        Debug.Log("item: "+item+" available: "+itemDict[item]);//REMOVE:
+        //REMOVE:Debug.Log("item: "+item+" available: "+itemDict[item]);
         return itemDict[item];
     }
 

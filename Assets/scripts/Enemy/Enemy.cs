@@ -139,7 +139,7 @@ public class Enemy : MonoBehaviour
         //checks if enemy has any health left
         if(enemyHealth <= 0)
         {
-            Debug.Log(("health zero"));//REMOVE:
+            //REMOVE:Debug.Log(("health zero"));
             //calculates spore drop amount
             dropAmount = Random.Range(minDropAmt,maxDropAmt);
             //destroys object and removes enemy from list if enemy dies
@@ -163,12 +163,6 @@ public class Enemy : MonoBehaviour
             enemyManager.DestroyInactive();
             //REMOVE:Debug.Log("destroyed");
         }
-
-        //if (melee)
-        //{
-        //    Debug.Log("melee true");//REMOVE:
-        //    rigidBody.AddForce(-transform.forward * forceMag, ForceMode.Force);
-        //}
     }
 
     private IEnumerator DmgFlashCoroutine()

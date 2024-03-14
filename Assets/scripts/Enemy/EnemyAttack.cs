@@ -32,24 +32,24 @@ public class EnemyAttack : MonoBehaviour
 
     private IEnumerator atkCoroutine(PlayerHealth player)
     {
-        Debug.Log("starting atkCoroutine");//REMOVE:
+        //REMOVE:Debug.Log("starting atkCoroutine");
         yield return new WaitForSeconds(atkSpeed*0.2f);
-        Debug.Log("returned to coroutine"); //REMOVE:
+        //REMOVE:Debug.Log("returned to coroutine"); 
         while (inAtkRange)
         {  
-            Debug.Log("damaging player");//REMOVE:
+            //REMOVE:Debug.Log("damaging player");
             player.DamagePlayer(enemyDmg);
             yield return new WaitForSeconds(atkSpeed);
         }
     }
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("trigger enter: "+other);//REMOVE:
+        //REMOVE:Debug.Log("trigger enter: "+other);
         PlayerHealth player = other.transform.GetComponent<PlayerHealth>();
         if (player)
         {
             StopAllCoroutines();
-            Debug.Log("triggered player: "+ player);//REMOVE:
+            //REMOVE:Debug.Log("triggered player: "+ player);
             inAtkRange = true;
             StartCoroutine(atkCoroutine(player));
         }
@@ -57,11 +57,11 @@ public class EnemyAttack : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        Debug.Log("trigger exit: "+other);//REMOVE:
+        //REMOVE:Debug.Log("trigger exit: "+other);
         PlayerHealth player = other.transform.GetComponent<PlayerHealth>();
         if (player)
         {
-            Debug.Log("un-triggered player: "+ player);//REMOVE:
+            //REMOVE:Debug.Log("un-triggered player: "+ player);
             inAtkRange = false;
             StopAllCoroutines();
         }

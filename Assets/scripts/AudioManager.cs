@@ -226,7 +226,7 @@ public class AudioManager : MonoBehaviour
     }
     public void Cough()
     {
-        Debug.Log("cough");//REMOVE:
+        //REMOVE:Debug.Log("cough");
         oneShots.PlayOneShot(coughs[Random.Range(0,coughs.Length)]);
     }
 
@@ -247,7 +247,7 @@ public class AudioManager : MonoBehaviour
 
     public void ClearAudio()
     {
-        Debug.Log("clear audio");//REMOVE:
+        //REMOVE:Debug.Log("clear audio");
         StopCoroutine(ShopBoughtItem());
         StopCoroutine(ShopExit());
         StopCoroutine(ShopNotEnoughSpores());
@@ -283,7 +283,7 @@ public class AudioManager : MonoBehaviour
 
     public void PlaySong(int song)
     {
-        Debug.Log("playing song #"+song);//REMOVE:
+        //REMOVE:Debug.Log("playing song #"+song);
         foreach (var source in songSources)
         {
             if (songSources[song] != source)
@@ -296,7 +296,7 @@ public class AudioManager : MonoBehaviour
 
     public IEnumerator TransitionSong(int song)
     {
-        Debug.Log("transitioning to song #"+song);//REMOVE:
+        //REMOVE:Debug.Log("transitioning to song #"+song);
         //transition from any song to another
         AudioSource currentSong = null;
         foreach (var source in songSources)
@@ -307,7 +307,7 @@ public class AudioManager : MonoBehaviour
                 break;
             }
         }
-        Debug.Log("transitioning from: "+currentSong);//REMOVE:
+        //REMOVE:Debug.Log("transitioning from: "+currentSong);
         if (currentSong != null)
         {
             while (currentSong.volume > 0)
