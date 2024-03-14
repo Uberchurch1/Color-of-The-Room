@@ -15,8 +15,9 @@ public class RoomManager : MonoBehaviour
     void Start()
     {
         environMan = FindObjectOfType<EnvironmentManager>();
-        currentRoom = roomTypes[0];
-        currentRoomI = 0;
+        currentRoom = roomTypes[1];
+        currentRoomI = 1;
+        environMan.ChangeWall(currentRoomI);
     }
 
 

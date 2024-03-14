@@ -18,10 +18,16 @@ public class EnemyAttack : MonoBehaviour
         enemyDmg = parentEnemy.enemyDmg;
         atkSpeed = parentEnemy.atkSpeed;
         
-        
         atkCollider = GetComponent<BoxCollider>();
-        atkCollider.size = new Vector3(1, 2, atkRange);
-        atkCollider.center = new Vector3(0, 0, atkRange * 0.5f);
+        if (parentEnemy.enemyTypeS != "boss")
+        {
+            atkCollider.size = new Vector3(1, 2, atkRange);
+            atkCollider.center = new Vector3(0, 0, atkRange * 0.5f);
+        }
+        else
+        {
+            atkCollider.size = new Vector3(atkRange, atkRange, atkRange);
+        }
     }
 
     private IEnumerator atkCoroutine(PlayerHealth player)
@@ -42,6 +48,7 @@ public class EnemyAttack : MonoBehaviour
         PlayerHealth player = other.transform.GetComponent<PlayerHealth>();
         if (player)
         {
+            StopAllCoroutines();
             Debug.Log("triggered player: "+ player);//REMOVE:
             inAtkRange = true;
             StartCoroutine(atkCoroutine(player));

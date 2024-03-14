@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class MouseLook : MonoBehaviour
 {
+    public float sliderSens = 1f;
     public float mouseXSens = 2.5f;
     public float mouseYSens = 2.5f; // New variable for vertical sensitivity
     public float mouseSmoothing = 1.5f;
@@ -42,8 +43,8 @@ public class MouseLook : MonoBehaviour
 
     void ModifyInput()
     {
-        mouseXPos *= mouseXSens * mouseSmoothing;
-        mouseYPos *= mouseYSens * mouseSmoothing; // Modify vertical mouse movement
+        mouseXPos *= sliderSens*mouseXSens * mouseSmoothing;
+        mouseYPos *= sliderSens*mouseYSens * mouseSmoothing; // Modify vertical mouse movement
         mouseXSmoothed = Mathf.Lerp(mouseXSmoothed, mouseXPos, 1 / mouseSmoothing);
         mouseYSmoothed = Mathf.Lerp(mouseYSmoothed, mouseYPos, 1 / mouseSmoothing); // Smooth vertical movement
     }

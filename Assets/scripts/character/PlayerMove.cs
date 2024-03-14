@@ -48,6 +48,7 @@ public class PlayerMove : MonoBehaviour
             {
                 walkSource.Stop();
             }
+            HudManager.Instance.GunWalk(isWalking);
         }
         if (_playerHealth.seeking)
         {
@@ -57,6 +58,7 @@ public class PlayerMove : MonoBehaviour
         {
             walkSource.pitch = 1;
         }
+        
     }
 
     void GetInput()

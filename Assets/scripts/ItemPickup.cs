@@ -5,6 +5,8 @@ using UnityEngine;
 public class ItemPickup : MonoBehaviour
 {
     public int amount;
+
+    public bool bigSpore = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -20,7 +22,14 @@ public class ItemPickup : MonoBehaviour
     private void OnTriggerEnter(Collider other) {
         if(other.CompareTag("Player")){
             Destroy(gameObject);
-            other.GetComponent<PlayerHealth>().GiveSpores(amount);
+            if (!bigSpore)
+            {
+                other.GetComponent<PlayerHealth>().GiveSpores(amount);
+            }
+            else
+            {
+                other.GetComponent<PlayerHealth>().hasBigSpore = true;
+            }
         }
     }
 }

@@ -6,16 +6,24 @@ using UnityEngine.SceneManagement;
 
 public class PlayerHealth : MonoBehaviour
 {
-    public float maxHealth = 100;
+    
     public int spores;
     public AudioManager audioMan;
     private float health;
     private PlayerMove playerMove;
     private SceneSwitcher _sceneSwitcher;
-    public int roundCount = 0;
+    public int roundCount = -1;
     public bool seeking = false;
     public bool isPaused = false;
     public bool isHealing = false;
+    public bool hasBigSpore = false;
+    
+    public float maxHealth = 100;
+    public int seekCost = 4;
+    public int healCost = 2;
+    public int healAmount = 2;
+    public int bossRound = 3;
+    
 
     // Start is called before the first frame update
     void Start()
@@ -26,7 +34,6 @@ public class PlayerHealth : MonoBehaviour
         HudManager.Instance.UpdSpores(spores);
         _sceneSwitcher = FindObjectOfType<SceneSwitcher>();
         spores = 0;
-        audioMan.PlaySong(2);
     }
 
     // Update is called once per frame
@@ -73,7 +80,7 @@ public class PlayerHealth : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Tab))
         {
-            isPaused = HudManager.Instance.ToggleExitMenu();
+            isPaused = HudManager.Instance.ToggleExitMenuB();
         }
     }
     
@@ -88,7 +95,7 @@ public class PlayerHealth : MonoBehaviour
 
     private void OnSceneLoad(Scene scene, LoadSceneMode mode)
     {
-        Debug.Log("loading new scene: "+scene.name);
+        //REMOVE:Debug.Log("loading new scene: "+scene.name);
         HudManager.Instance.UpdHealth((int)health);
         HudManager.Instance.UpdSpores(spores);
     }
@@ -96,15 +103,15 @@ public class PlayerHealth : MonoBehaviour
     //damages the player by int value damage
     public void DamagePlayer(float damage)
     {
+        //play audioMan.DamageSound()
+        audioMan.DamageSound();
         health -= damage;
         HudManager.Instance.StopAllCoroutines();
         HudManager.Instance.StartCoroutine(HudManager.Instance.AtkIndCoroutine());
         //checks if player has died and if true resets current scene
         if(health <= 0){
             Debug.Log("player died");
-            Scene currentScene = SceneManager.GetActiveScene();
             _sceneSwitcher.SwitchScene("Death");
-            Destroy(gameObject);
         }
         HudManager.Instance.UpdHealth((int)health);
     }
@@ -130,7 +137,7 @@ public class PlayerHealth : MonoBehaviour
         }
         catch (Exception)
         {
-            Debug.Log("Insufficient Spores");
+            //REMOVE:Debug.Log("Insufficient Spores");
             return false;
         }
 
@@ -146,6 +153,11 @@ public class PlayerHealth : MonoBehaviour
         HudManager.Instance.UpdHealth((int)health);
     }
 
+    public float CheckHealth()
+    {
+        return health;
+    }
+
     private IEnumerator HealCoroutine()
     {
         //REMOVE:Debug.Log("heal start");
@@ -153,7 +165,7 @@ public class PlayerHealth : MonoBehaviour
         {
             
             //REMOVE:Debug.Log("health low");
-            if (RemSpores(1))
+            if (RemSpores(healCost))
             {
                 if (!audioMan.CheckHealing())
                 {
@@ -162,7 +174,7 @@ public class PlayerHealth : MonoBehaviour
                 }
                 //REMOVE:Debug.Log("healing");
                 playerMove.playerSpeed = 5f;
-                GiveHealth(2);
+                GiveHealth(healAmount);
                 isHealing = true;
                 yield return new WaitForSeconds(0.1f);
             }
@@ -183,7 +195,7 @@ public class PlayerHealth : MonoBehaviour
         Debug.Log("seek start");//REMOVE:
         while (Input.GetMouseButton(1) && spores != 0)
         {
-            if (RemSpores(1))
+            if (RemSpores(seekCost))
             {
                 Time.timeScale = 0.5f;
                 //REMOVE:Debug.Log("health low");
@@ -206,5 +218,25 @@ public class PlayerHealth : MonoBehaviour
         seeking = false;
         playerMove.playerSpeed = 17f;
         audioMan.StopInhale();
+    }
+
+    public void BuffMaxHealth(int buff)
+    {
+        maxHealth += (float)buff;
+    }
+    public void BuffSeekCost(int buff)
+    {
+        if (seekCost > 1)
+        {
+            seekCost -= buff;
+        }
+    }
+    public void BuffHealCost(int buff)
+    {
+        healCost -= buff;
+    }
+    public void BuffHealAmount(int buff)
+    {
+        healAmount += buff;
     }
 }

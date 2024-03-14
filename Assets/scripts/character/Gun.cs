@@ -6,14 +6,10 @@ using UnityEngine.SceneManagement;
 
 public class Gun : MonoBehaviour
 {
-
-    public float smallDmg = 10f;
-    public float bigDmg = 25f;
     public float range = 20f;
-    public float vertRange = 20f;
+    public float vertRange = 4f;
     public float fireRate = 1f;
     public float gunShotRadius = 20f;
-    public int piercing = 1;
     public bool reloadB = true;
     public int maxAmmo = 5;
     public int ammo;
@@ -27,17 +23,21 @@ public class Gun : MonoBehaviour
     private int enemyLayer;
     private SceneSwitcher _sceneSwitcher;
     private PlayerHealth _playerHealth;
+    
+    public float gunDmg = 55f;
+    public int piercing = 1;
 
     // Start is called before the first frame update
     void Start()
     {
+        enemyManager = FindObjectOfType<EnemyManager>();
         _playerHealth = GetComponentInParent<PlayerHealth>();
         enemyLayer = LayerMask.NameToLayer("Enemy");
         ammo = maxAmmo;
         //creates a trigger hit box(big box that will damage all enemies inside)
         gunTrigger = GetComponent<BoxCollider>();
         gunTrigger.size = new Vector3(1, vertRange, range);
-        gunTrigger.center = new Vector3(0, 0, range*0.5f);
+        gunTrigger.center = new Vector3(0, vertRange *0.3f, range*0.5f);
     }
 
     private void OnEnable()
@@ -94,78 +94,78 @@ public class Gun : MonoBehaviour
             enemyCollider.GetComponent<EnemyAwareness>().isAggro = true;
         }
         //REMOVE:Debug.Log("playing audio");
-
+        HudManager.Instance.GunShoot();
         //play shoot audio
         GetComponent<AudioSource>().Stop();
         GetComponent<AudioSource>().Play();
-        //REMOVE:Debug.Log("starting hitTotal");
+        Debug.Log("starting hitTotal");//REMOVE:
         //checks for each enemy in the trigger hit box
         Dictionary<int, Enemy> enemyDict = new Dictionary<int, Enemy>();//creates an array to store enemies that will be hit
-        //REMOVE:Debug.Log("dict created");
+        Debug.Log("dict created");//REMOVE:
         //adds enemies that will be hit to a dictionary (equal to the piercing value-1 or equal to the amount of enemies in enemiesInTrigger [whichever is less])
         for (int j = 0; (j < piercing) && (j < enemyManager.enemiesInTrigger.Count); j++){
-            //REMOVE:Debug.Log("j is "+j);
+            Debug.Log("j is "+j);//REMOVE:
             Vector3 dir = Vector3.zero;
             int enemyIndex = -1;
             //finds closest enemy in enemiesInTrigger
             for(int i = 0; i < enemyManager.enemiesInTrigger.Count; i++){
-                //REMOVE:Debug.Log("i is "+i);
+                Debug.Log("i is "+i);//REMOVE:
                 if(!enemyDict.ContainsKey(i)){
-                    //REMOVE:Debug.Log("doesnt contain key");
+                    Debug.Log("doesnt contain key");//REMOVE:
                     Enemy enemy = enemyManager.enemiesInTrigger[i];
                     Vector3 dirTemp = enemy.transform.position - transform.position;
                     if (i == 0){
-                        //REMOVE:Debug.Log("i was 0");
+                        Debug.Log("i was 0");//REMOVE:
                         dir = dirTemp;
                         enemyIndex = i;
-                        //REMOVE:Debug.Log("enemyIndex set: "+enemyIndex+" = "+i);
+                        Debug.Log("enemyIndex set: "+enemyIndex+" = "+i);//REMOVE:
                     }
                     else if(dir.sqrMagnitude > dirTemp.sqrMagnitude){
-                        //REMOVE:Debug.Log("dirTemp was smaller");
+                        Debug.Log("dirTemp was smaller");//REMOVE:
                         dir = dirTemp;
                         enemyIndex = i;
-                        //REMOVE:Debug.Log("enemyIndex set: "+enemyIndex+" = "+i);
+                        Debug.Log("enemyIndex set: "+enemyIndex+" = "+i);//REMOVE:
                     }
                 }
             }
             //adds that enemy to dictionary
             if(enemyIndex != -1){
                 enemyDict.Add(enemyIndex, enemyManager.enemiesInTrigger[enemyIndex]);
-                //REMOVE:Debug.Log("added enemy #"+enemyIndex);
+                Debug.Log("added enemy #"+enemyIndex);//REMOVE:
             }
             else{
-                //REMOVE:Debug.Log("enemyIndex was -1");
+                Debug.Log("enemyIndex was -1");//REMOVE:
             }
         }
-        //REMOVE:Debug.Log("starting raycast");
+        Debug.Log("starting raycast");//REMOVE:
         //try to raycast each enemy in the dictionary
         foreach (KeyValuePair<int, Enemy> entry in enemyDict)
         {
             var enemy = entry.Value;
-            //REMOVE:Debug.Log("hitting enemy x");
+            Debug.Log("hitting enemy x");//REMOVE:
             var dir = enemy.transform.position - transform.position;
             //checks for line of sight with enemies
-            //REMOVE:Debug.Log("raycasting");
+            Debug.Log("raycasting");//REMOVE:
             RaycastHit hit;
             if(Physics.Raycast(transform.position, dir, out hit, range, raycastLayerMask))//can multiply range to reach corners but will overextend
             {
-                //REMOVE:Debug.Log("raycast hit"+hit.collider);
-                //REMOVE:Debug.Log(hit.transform.gameObject.layer);
-                //REMOVE:Debug.Log(enemyLayer);
+                Debug.Log("raycast hit"+hit.collider);//REMOVE:
+                Debug.Log(hit.transform.gameObject.layer);//REMOVE:
+                Debug.Log(enemyLayer);//REMOVE:
                 if(hit.transform.gameObject.layer == enemyLayer)//try this or (hit.transform == enemy.transform)
                 {
-                    //REMOVE:Debug.Log("hit enemy");
+                    Debug.Log("hit enemy");//REMOVE:
                     //applies different damage amounts base off of half range
                     float dist = Vector3.Distance(enemy.transform.position, transform.position);
                     if(dist > range * 0.5f)
                     {
-                        //REMOVE:Debug.Log("small damage");
-                        enemy.TakeDamage(smallDmg, false);
+                        Debug.Log("small damage");//REMOVE:
+                        enemy.TakeDamage(gunDmg/2, false);
                     }
                     else
                     {
-                        //REMOVE:Debug.Log("big gamage");
-                        enemy.TakeDamage(bigDmg, false);
+                        Debug.Log("big gamage");//REMOVE:
+                        enemy.TakeDamage(gunDmg, false);
                     }
                     
                     
@@ -238,5 +238,14 @@ public class Gun : MonoBehaviour
             //REMOVE:Debug.Log("enemy exit: "+enemy);
             enemyManager.RemoveEnemy(enemy);
         }
+    }
+    
+    public void BuffGunDmg(int buff)
+    {
+        gunDmg += (int)buff;
+    }
+    public void BuffGunPierce(int buff)
+    {
+        piercing += (int)buff;
     }
 }

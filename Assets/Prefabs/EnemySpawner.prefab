@@ -48,5 +48,5 @@ MonoBehaviour:
   - {fileID: 1225870241584656509, guid: 4492070fedd309147ab7fcceda8dc35d, type: 3}
   - {fileID: 9131455037507889207, guid: 794d401d18652bb479a56b387bc3e9d8, type: 3}
   enemyBlank: {fileID: 5745345702255984452, guid: 20696ce38ab1c9141851978121097bd6, type: 3}
-  spawnRange: 3
+  spawnRange: 2
   spawnRate: 2

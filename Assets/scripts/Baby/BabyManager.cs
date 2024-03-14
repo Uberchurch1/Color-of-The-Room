@@ -27,7 +27,7 @@ public class BabyManager : MonoBehaviour
     {
         babiesInTrigger.Add(baby);
         if(babiesInTrigger.Count != 0){
-            hudManager.GetComponent<HudManager>().ShowGrab();
+            hudManager.GetComponent<HudManager>().ShowGrab(false);
         }
     }
     
@@ -48,7 +48,7 @@ public class BabyManager : MonoBehaviour
     {
         doorsInTrigger.Add(door);
         if(doorsInTrigger.Count != 0){
-            hudManager.GetComponent<HudManager>().ShowGrab();
+            hudManager.GetComponent<HudManager>().ShowGrab(false);
         }
     }
     
@@ -64,7 +64,7 @@ public class BabyManager : MonoBehaviour
     {
         shopsInTrigger.Add(shop);
         if(shopsInTrigger.Count != 0){
-            hudManager.GetComponent<HudManager>().ShowGrab();
+            hudManager.GetComponent<HudManager>().ShowGrab(false);
         }
     }
     

@@ -13,6 +13,7 @@ public class Grab : MonoBehaviour
     private BabyManager babyManager;
     private SceneSwitcher _sceneSwitcher;
     private PlayerHealth _playerHealth;
+    private AudioManager audioMan;
 
     // Start is called before the first frame update
     void Start()
@@ -21,6 +22,7 @@ public class Grab : MonoBehaviour
         grabTrigger.size = new Vector3(1.5f, 1.5f, range);
         grabTrigger.center = new Vector3(0,0, range*0.5f);
         _playerHealth = GetComponentInParent<PlayerHealth>();
+        audioMan = FindObjectOfType<AudioManager>();
     }
 
     // Update is called once per frame
@@ -65,9 +67,8 @@ public class Grab : MonoBehaviour
             {
                 hudMan.GrabTriggerCoroutine();
                 baby.Eat();
-                //play eat audio
-                GetComponent<AudioSource>().Stop();
-                GetComponent<AudioSource>().Play();
+                //play audioMan.EatSound()
+                StartCoroutine(audioMan.EatSound());
                 return true;
             }
         }
@@ -86,7 +87,7 @@ public class Grab : MonoBehaviour
             hudMan.GrabTriggerCoroutine();
             return door.Open();
         }
-        Debug.Log("did not try open");//REMOVE:
+        //REMOVE:Debug.Log("did not try open");
         return false;
     }
 
@@ -103,22 +104,22 @@ public class Grab : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("grab entered: "+other);//REMOVE:
+        //REMOVE:Debug.Log("grab entered: "+other);
         Baby baby = other.transform.GetComponent<Baby>();
         if(baby){
             babyManager.AddBaby(baby);
-            Debug.Log("added baby");//REMOVE:
+            //REMOVE:Debug.Log("added baby");
         }
 
         Door door = other.transform.GetComponent<Door>();
         if(door){
             babyManager.AddDoor(door);
-            Debug.Log("added door");//REMOVE:
+            //REMOVE:Debug.Log("added door");
         }
         Shop shop = other.transform.GetComponent<Shop>();
         if(shop){
             babyManager.AddShop(shop);
-            Debug.Log("added shop");//REMOVE:
+            //REMOVE:Debug.Log("added shop");
         }
     }
 
@@ -136,7 +137,7 @@ public class Grab : MonoBehaviour
         Shop shop = other.transform.GetComponent<Shop>();
         if(shop){
             babyManager.RemoveShop(shop);
-            Debug.Log("added shop");//REMOVE:
+            //REMOVE:Debug.Log("added shop");
         }
     }
 }

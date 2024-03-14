@@ -11,7 +11,7 @@ public class Enemy : MonoBehaviour
     public float atkRange = 1.5f;
     public float enemyDmg = 5f;
     public float atkSpeed = 1f;
-    public float moveSpeed = 7f;
+    public float moveSpeed = 5f;
     public float forceMag = 100f;
     public bool respawnable;
     public GameObject enemyPrefab;
@@ -40,62 +40,90 @@ public class Enemy : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
-        walkSource = GetComponent<AudioSource>();
-        rigidBody = GetComponent<Rigidbody>();
         player = FindObjectOfType<PlayerHealth>();
-        playerTransform = player.transform;
-        _enemyAttack = GetComponentInChildren<EnemyAttack>();
-        _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         enemyManager = FindObjectOfType<EnemyManager>();
-        enemyManager.AddLiveEnemy(this);//adds enemy to world list when spawned
-        roomMan = FindObjectOfType<RoomManager>();
-        enemyTypeI = Array.IndexOf(roomMan.GetRoomList(), enemyTypeS);
-        enemyCollider = GetComponent<CapsuleCollider>();
-        //REMOVE:Debug.Log("spawned type: "+enemyTypeI);
-        
         waveTracker = FindObjectOfType<WaveTracker>();
-        enemyAI = GetComponent<EnemyAI>();
-        float speed = (float)(Math.Pow(waveTracker.GetWaveCount()+ (enemyManager.GetRoundCount() * 5),  2) * 0.05) + 7f;
-        enemyAI.ChangeSpeed(Math.Clamp(speed, 7f, 16.5f));
-        maxHealth += waveTracker.GetWaveCount();
         enemyHealth = maxHealth;
+        _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        _enemyAttack = GetComponentInChildren<EnemyAttack>();
+        if (enemyTypeS != "boss")
+        {
+            enemyManager.AddLiveEnemy(this); //adds enemy to world list when spawned
+            walkSource = GetComponent<AudioSource>();
+            rigidBody = GetComponent<Rigidbody>();
+            playerTransform = player.transform;
+            roomMan = FindObjectOfType<RoomManager>();
+            enemyTypeI = Array.IndexOf(roomMan.GetRoomList(), enemyTypeS);
+            enemyCollider = GetComponent<CapsuleCollider>();
+            //REMOVE:Debug.Log("spawned type: "+enemyTypeI);
+
+            enemyAI = GetComponent<EnemyAI>();
+            float speed = (float)(Math.Pow((enemyManager.GetRoundCount() * 2), 2) * 0.05) + moveSpeed;
+            enemyAI.ChangeSpeed(Math.Clamp(speed, 5f, 16.5f));
+            maxHealth += enemyManager.GetRoundCount() * 15;
+        }
+        else
+        {
+            if (!enemyManager.bossList.Contains(this))
+            {
+                enemyManager.AddBoss(this);
+            }
+        }
+    }
+
+    private void OnEnable()
+    {
+        player = FindObjectOfType<PlayerHealth>();
+        enemyManager = FindObjectOfType<EnemyManager>();
+        waveTracker = FindObjectOfType<WaveTracker>();
+        enemyHealth = maxHealth;
+        if (enemyTypeS == "boss")
+        {
+            if (!enemyManager.bossList.Contains(this))
+            {
+                enemyManager.AddBoss(this);
+            }
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (IsInRoom())
+        if (enemyTypeS != "boss")
         {
-            
-            _spriteRenderer.color =
-                new Color(_spriteRenderer.color.r, _spriteRenderer.color.g, _spriteRenderer.color.b, 1f);
-            _spriteRenderer.enabled = true;
-            enemyCollider.enabled = true;
-            walkSource.enabled = true;
-        }
-        else
-        {
-            if (player.seeking)
+            if (IsInRoom())
             {
+
+                _spriteRenderer.color =
+                    new Color(_spriteRenderer.color.r, _spriteRenderer.color.g, _spriteRenderer.color.b, 1f);
                 _spriteRenderer.enabled = true;
-                _spriteRenderer.color = new Color(1, 1, 1, 0.5f);
+                enemyCollider.enabled = true;
+                walkSource.enabled = true;
             }
             else
             {
-                _spriteRenderer.enabled = false;
-            }
-            enemyCollider.enabled = false;
-            walkSource.enabled = false;
-        }
+                if (player.seeking)
+                {
+                    _spriteRenderer.enabled = true;
+                    _spriteRenderer.color = new Color(1, 1, 1, 0.5f);
+                }
+                else
+                {
+                    _spriteRenderer.enabled = false;
+                }
 
-        if (player.seeking)
-        {
-            walkSource.pitch = Time.timeScale;
-        }
-        else
-        {
-            walkSource.pitch = 1;
+                enemyCollider.enabled = false;
+                walkSource.enabled = false;
+            }
+
+            if (player.seeking)
+            {
+                walkSource.pitch = Time.timeScale;
+            }
+            else
+            {
+                walkSource.pitch = 1;
+            }
         }
     }
 
@@ -116,6 +144,7 @@ public class Enemy : MonoBehaviour
             dropAmount = Random.Range(minDropAmt,maxDropAmt);
             //destroys object and removes enemy from list if enemy dies
             enemyManager.RemoveEnemy(this);
+            enemyManager.RemoveBoss(this);
             enemyManager.RemoveMeleeEnemy(this);
             enemyManager.RemoveLiveEnemy(this);
             //respawns enemy if allowed
@@ -181,8 +210,8 @@ public class Enemy : MonoBehaviour
         Destroy(gameObject);
     }
 
-    public void BIGUPDAHOLEISLAND()//REMOVE:
+    public float CheckEnemyHealth()
     {
-        Debug.Log("BIG UP DA wHOLE ISLAND");
+        return enemyHealth;
     }
 }

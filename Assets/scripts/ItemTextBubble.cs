@@ -15,6 +15,7 @@ public class ItemTextBubble : MonoBehaviour
         [FormerlySerializedAs("ItemNum")] 
     public int itemNum;
     public int price;
+    private PlayerHealth _playerHealth;
 
     private void Start()
     {
@@ -25,22 +26,33 @@ public class ItemTextBubble : MonoBehaviour
 
     private void OnSceneLoad(Scene scene, LoadSceneMode mode)
     {
-        shop = FindObjectOfType<Shop>();
-        _sceneSwitcher = FindObjectOfType<SceneSwitcher>();
-    }
-
-    private void OnEnable()
-    {
+        button = GetComponentInChildren<Button>().gameObject;
         shop = FindObjectOfType<Shop>();
         _sceneSwitcher = FindObjectOfType<SceneSwitcher>();
         if (_sceneSwitcher.CheckCurrentScene("Room"))
         {
+            //OnEnable();
+        }
+    }
+
+    private void OnEnable()
+    {
+        button = GetComponentInChildren<Button>().gameObject;
+        Debug.Log("active scene: "+SceneManager.GetActiveScene().name);
+        Debug.Log("item: "+itemNum+" enabled");//REMOVE:
+        shop = FindObjectOfType<Shop>();
+        _sceneSwitcher = FindObjectOfType<SceneSwitcher>();
+        if (_sceneSwitcher.CheckCurrentScene("Shop"))
+        {
+            Debug.Log("checking availability");//REMOVE:
             if (shop.CheckAvailable(itemNum))
             {
+                Debug.Log("item: "+itemNum+" active");//REMOVE:
                 button.SetActive(true);
             }
             else
             {
+                Debug.Log("item: "+itemNum+" not active");//REMOVE:
                 button.SetActive(false);
             }
         }

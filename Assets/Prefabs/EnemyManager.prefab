@@ -47,7 +47,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemiesInTrigger: []
   enemiesAlive: []
+  bossList: []
+  boss: {fileID: 0}
   hudMan: {fileID: 0}
+  bossRound: 3
+  door: {fileID: 0}
 --- !u!114 &1950572733632883628
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -60,6 +64,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d010516a71cea714796c04b8e6b82e75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawners: []
   waveOngoing: 0
   waveRequest: 0
   waveRepeat: 0
+  waveDelay: 5

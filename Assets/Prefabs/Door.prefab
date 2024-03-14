@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 2868420485820444555}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.61, z: 0}
+  m_LocalPosition: {x: 0.313, y: -0.61, z: 0}
   m_LocalScale: {x: 5, y: 5, z: 5}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -74,7 +74,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 09536570295ac524db5b7846a662a03a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: d177fa8fe80cfbb4a97f3ee68f5e5360, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 1
   m_FlipY: 0
@@ -170,8 +170,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _sceneSwitcher: {fileID: 0}
   unlocked: 0
-  open: {fileID: 8300000, guid: 45a94f1d0d77b6d4a965e87eb157af9e, type: 3}
-  locked: {fileID: 8300000, guid: ec42010ca79fd234689a8860a7286744, type: 3}
+  open: {fileID: 8300000, guid: 96355564efa78f94a9b8e73c53a974f5, type: 3}
+  locked: {fileID: 8300000, guid: f357801d92c6bbe468fa7f4457e60b80, type: 3}
 --- !u!54 &3186533055401966978
 Rigidbody:
   m_ObjectHideFlags: 0

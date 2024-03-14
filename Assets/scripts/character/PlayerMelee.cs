@@ -6,7 +6,6 @@ using UnityEngine.SceneManagement;
 public class PlayerMelee : MonoBehaviour
 {
     public float range = 1.5f;
-    public float damage = 10f;
     public float hitRate = 1f;
     public AudioManager audioMan;
     
@@ -14,11 +13,14 @@ public class PlayerMelee : MonoBehaviour
     private EnemyManager enemyManager;
     private SceneSwitcher _sceneSwitcher;
     private float timeToHit;
+    
+    public float damage = 10f;
+    public int heal = 1;
         
     // Start is called before the first frame update
     void Start()
     {
-        
+        enemyManager = FindObjectOfType<EnemyManager>();
         meleeTrigger = GetComponent<BoxCollider>();
         meleeTrigger.size = new Vector3(1, 2, range);
         meleeTrigger.center = new Vector3(0, 0, range*0.5f);
@@ -57,7 +59,7 @@ public class PlayerMelee : MonoBehaviour
         { 
             //play eat audio
             audioMan.MeleeHit();
-            enemyManager.MeleeDamge(damage); 
+            enemyManager.MeleeDamge(damage, heal); 
         }
         else
         {
@@ -86,4 +88,12 @@ public class PlayerMelee : MonoBehaviour
         }
     }
     
+    public void BuffMeleeDmg(int buff)
+    {
+        damage += (int)buff;
+    }
+    public void BuffMeleeHeal(int buff)
+    {
+        heal += (int)buff;
+    }
 }

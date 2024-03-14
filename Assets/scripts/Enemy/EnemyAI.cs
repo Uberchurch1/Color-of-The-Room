@@ -7,14 +7,14 @@ using Object = System.Object;
 public class EnemyAI : MonoBehaviour
 {
     private EnemyAwareness enemyAware;
-    private Transform playerTransform;
+    private Collider playerTransform;
     private NavMeshAgent enemyNavMesh;
     private AudioSource walkSource;
 
     private void Start()
     {
         enemyAware = GetComponent<EnemyAwareness>();
-        playerTransform = FindObjectOfType<PlayerMove>().transform;
+        playerTransform = FindObjectOfType<PlayerMove>().GetComponentInParent<CapsuleCollider>();
         enemyNavMesh = GetComponent<NavMeshAgent>();
         walkSource = GetComponent<AudioSource>();
     }
@@ -22,7 +22,7 @@ public class EnemyAI : MonoBehaviour
     private void Update() {
         if (enemyAware.isAggro)
         {
-            enemyNavMesh.SetDestination(playerTransform.position);
+            enemyNavMesh.SetDestination(playerTransform.ClosestPointOnBounds(transform.position));
             if (!walkSource.isPlaying && walkSource.enabled)
             {
                 walkSource.Play();

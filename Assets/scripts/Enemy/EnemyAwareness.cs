@@ -23,9 +23,9 @@ public class EnemyAwareness : MonoBehaviour
         if(distToPLayer <= awarenessRad){
             isAggro = true;
         }
-        if (isAggro){
-            GetComponent<MeshRenderer>().material = aggroMat;
-        }
+        //if (isAggro){
+        //    GetComponent<MeshRenderer>().material = aggroMat;
+        //}
         
     }
     

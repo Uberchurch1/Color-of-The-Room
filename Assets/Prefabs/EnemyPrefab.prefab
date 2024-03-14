@@ -178,16 +178,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   atkRange: 1.5
-  enemyDmg: 7
+  enemyDmg: 6
   atkSpeed: 1
-  moveSpeed: 7
+  moveSpeed: 5
   forceMag: 100
   respawnable: 0
   enemyPrefab: {fileID: 5745345702255984452}
   onHitEffect: {fileID: 4252368205243203926, guid: 7bf865d09faf4cf43b58783d501b63f0, type: 3}
   onDeathDrop: {fileID: 327813584732886060, guid: 8b4f29ec86f92f14588519ed213e0811, type: 3}
-  maxDropAmt: 4
-  minDropAmt: 2
+  maxDropAmt: 8
+  minDropAmt: 3
   enemyTypeS: 
 --- !u!114 &1028814221974693606
 MonoBehaviour:
@@ -226,7 +226,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: e588f377500d12249a3100b37c10dc02, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 0b7b0ca5d9dd29640a08fc9ff96d86f8, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.7
   m_Pitch: 0.9

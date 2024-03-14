@@ -29,10 +29,11 @@ public class WaveTracker : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.LeftBracket)){
             Debug.Log("end key down");
-            StartCoroutine(EndWave());}//test giving sporesd to the player REMOVE:
+            StartCoroutine(EndWave());}//manually end wave//REMOVE:
+        
         if(Input.GetKeyDown(KeyCode.RightBracket)){
             Debug.Log("start key down");
-            StartWave();}//test removing spores from the player REMOVE:
+            StartWave();}//manually start wave//REMOVE:
     }
 
     public void StartWave()

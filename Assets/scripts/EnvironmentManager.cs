@@ -14,7 +14,7 @@ public class EnvironmentManager : MonoBehaviour
     private float[] timings1 = new float[5] { .2f, .2f, .2f, .2f, .2f};
     private Material environMat;
     private GameObject[] environObjects;
-    private RoomManager roomMan;
+    private RoomManager roomMan = null;
     // Start is called before the first frame update
     void Start()
     {
@@ -25,13 +25,16 @@ public class EnvironmentManager : MonoBehaviour
             environObjects[i] = transform.GetChild(i).gameObject;
         }
 
-        StartCoroutine(WallCoroutine0());
+        ChangeWall(roomMan.GetRoomTypeI());
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (roomMan == null)
+        {
+            roomMan = FindObjectOfType<RoomManager>();
+        }
     }
 
     public void ChangeWall(int room)

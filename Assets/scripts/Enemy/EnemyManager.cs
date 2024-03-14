@@ -2,12 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class EnemyManager : MonoBehaviour
 {
 
     public List<Enemy> enemiesInTrigger = new List<Enemy>();//enemies in gun hitbox
     public List<Enemy> enemiesAlive = new List<Enemy>();//enemies currently in world
+        [FormerlySerializedAs("bossAlive")]
+    public List<Enemy> bossList = new List<Enemy>();//boss list
+    public Enemy boss;
     private List<Enemy> enemiesInMelee = new List<Enemy>();//enemies in melee hitbox
     private WaveTracker waveTracker;
     private List<EnemySpawn> activeSpawners = new List<EnemySpawn>();
@@ -15,15 +19,16 @@ public class EnemyManager : MonoBehaviour
     private PlayerHealth player;
     private TextMeshProUGUI turnAround;
     private int roundCount;
+    public int bossRound = 3;
     public Door door;
     
     private void Start() {
         waveTracker = GetComponent<WaveTracker>();
         player = FindObjectOfType<PlayerHealth>();
-        StartCoroutine(CheckActiveCoroutine());
-        StartCoroutine(StarGameCoroutine());
-        turnAround = HudManager.Instance.turnAround;
         roundCount = player.roundCount;
+        StartCoroutine(CheckActiveCoroutine());
+        StartCoroutine(StartGameCoroutine());
+        turnAround = HudManager.Instance.turnAround;
     }
 
     private void Update() 
@@ -34,21 +39,43 @@ public class EnemyManager : MonoBehaviour
     //ends wave if there are no enemies alive and no active spawners
     public void CheckEndWave(bool isStart)
     {
-        Debug.Log("checking end wave");//REMOVE:
+        //REMOVE:Debug.Log("checking end wave");
         if(enemiesAlive.Count == 0 && activeSpawners.Count == 0){
             waveTracker.waveOngoing = false;
-            Debug.Log("end wave = true #"+waveTracker.GetWaveCount());//REMOVE:
-            if (!isStart && ((waveTracker.GetWaveCount() % 5) == 0))
+            //REMOVE:Debug.Log("end wave = true #"+waveTracker.GetWaveCount());
+            if (roundCount != bossRound)
             {
-                Debug.Log("ending round #"+roundCount);//REMOVE:
-                roundCount += 1;
-                player.roundCount += 1;
-                StartCoroutine(RoundEndCoroutine());
+                if (roundCount == -1 && waveTracker.GetWaveCount() == 1)
+                {
+                    //REMOVE:Debug.Log("ending round #"+roundCount);
+                    roundCount += 1;
+                    player.roundCount += 1;
+                    StartCoroutine(RoundEndCoroutine());
+                }
+                else if (!isStart && ((waveTracker.GetWaveCount() % 4) == 0))
+                {
+                    //REMOVE:Debug.Log("ending round #"+roundCount);
+                    roundCount += 1;
+                    player.roundCount += 1;
+                    StartCoroutine(RoundEndCoroutine());
+                }
+                else
+                {
+                    //REMOVE:Debug.Log("starting next wave");
+                    StartCoroutine(waveTracker.EndWave());
+                }
             }
             else
             {
-                Debug.Log("starting next wave");//REMOVE:
-                StartCoroutine(waveTracker.EndWave());
+                if (isStart)
+                {
+                    StartCoroutine(waveTracker.EndWave());
+                    boss.gameObject.SetActive(true);
+                }
+                else
+                {
+                    StartCoroutine(RoundEndCoroutine());
+                }
             }
         }
     }
@@ -68,12 +95,34 @@ public class EnemyManager : MonoBehaviour
     {
         enemiesInTrigger.Remove(enemy);
     }
+    public void AddBoss(Enemy enemy)
+    {
+        bossList.Add(enemy);
+    }
+    
+    public void RemoveBoss(Enemy enemy)
+    {
+        bossList.Remove(enemy);
+    }
+
+
+    public bool CheckBossAlive()
+    {
+        if (bossList.Count > 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
     
     //add/remove enemies from melee hitbox
     public void AddMeleeEnemy(Enemy enemy)
     {
         enemiesInMelee.Add(enemy);
-        hudMan.ShowGrab();
+        hudMan.ShowGrab(true);
     }
     
     public void RemoveMeleeEnemy(Enemy enemy)
@@ -87,13 +136,13 @@ public class EnemyManager : MonoBehaviour
         return enemiesInMelee.Count;
     }
 
-    public void MeleeDamge(float damage)
+    public void MeleeDamge(float damage, int heal)
     {
         hudMan.GrabTriggerCoroutine();
         foreach (var enemy in enemiesInMelee)
         {
             enemy.TakeDamage(damage, true);
-            player.GiveHealth(1);
+            player.GiveHealth(heal);
         }
     }
 
@@ -111,13 +160,13 @@ public class EnemyManager : MonoBehaviour
     //add/remove enemy spawners
     public void AddSpawner(EnemySpawn spawner)
     {
-        Debug.Log("added spawner, count: "+activeSpawners.Count);//REMOVE:
+        //REMOVE:Debug.Log("added spawner, count: "+activeSpawners.Count);
         activeSpawners.Add(spawner);
     }
     
     public void RemoveSpawner(EnemySpawn spawner)
     {
-        Debug.Log("removed spawner, count: "+activeSpawners.Count);//REMOVE:
+        //REMOVE:Debug.Log("removed spawner, count: "+activeSpawners.Count);
         activeSpawners.Remove(spawner);
     }
 
@@ -166,16 +215,20 @@ public class EnemyManager : MonoBehaviour
         }
     }
 
-    private IEnumerator StarGameCoroutine()
+    private IEnumerator StartGameCoroutine()
     {
-        HudManager.Instance.turnAround.alpha = 0f;
-        yield return new WaitForSeconds(1f);
-        while (HudManager.Instance.turnAround.alpha < 1)
+        if (roundCount == -2)
         {
-            HudManager.Instance.turnAround.alpha += 0.2f;
-            yield return new WaitForSeconds(0.4f);
+            HudManager.Instance.turnAround.alpha = 0f;
+            yield return new WaitForSeconds(0.25f);
+            while (HudManager.Instance.turnAround.alpha < 1)
+            {
+                HudManager.Instance.turnAround.alpha += 0.2f;
+                yield return new WaitForSeconds(0.4f);
+            }
+
+            yield return new WaitForSeconds(0.5f);
         }
-        yield return new WaitForSeconds(0.5f);
         HudManager.Instance.turnAround.alpha = 0f;
         CheckEndWave(true);
     }
@@ -184,7 +237,7 @@ public class EnemyManager : MonoBehaviour
     {
         door.unlocked = true;
         waveTracker.ResetWaveCount();
-        Debug.Log("round ending, next round: "+roundCount);//REMOVE:
+        //REMOVE:Debug.Log("round ending, next round: "+roundCount);
         turnAround.text = "YOU";
         turnAround.alpha = 1f;
         yield return new WaitForSeconds(1f);

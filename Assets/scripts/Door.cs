@@ -28,13 +28,13 @@ public class Door : MonoBehaviour
 
     private void Awake()
     {
-        if (_sceneSwitcher.CheckCurrentScene("TheRoom"))
+        if (_sceneSwitcher.CheckCurrentScene("Shop"))
         {
-            unlocked = false;
+            unlocked = true;
         }
         else
         {
-            unlocked = true;
+            unlocked = false;
         }
     }
 
@@ -67,6 +67,10 @@ public class Door : MonoBehaviour
         }
         else
         {
+            if (_sceneSwitcher.CheckCurrentScene("Start"))
+            {
+                FindObjectOfType<PlayerHealth>().spores = 0;
+            }
             _sceneSwitcher.SwitchScene("TheRoom");
         }
     }
